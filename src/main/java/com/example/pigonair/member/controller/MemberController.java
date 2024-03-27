@@ -32,6 +32,21 @@ public class MemberController {
 		return "login";
 	}
 
+	@GetMapping("/mypage")
+	public String myPage() {
+		return "mypage";
+	}
+
+	@GetMapping("/ticket")
+	public String ticket() {
+		return "ticket";
+	}
+
+	@GetMapping("/home")
+	public String homePage() {
+		return "home";
+	}
+
 	@Operation(summary = "회원가입", description = "회원 가입시 필요한 정보를 입력합니다.")
 	@PostMapping("/signup")
 	public String signup(MemberRequestDto.SignupRequestDto requestDto, Model model) {

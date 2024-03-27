@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Home Page</h1>
+<button onclick="redirectToMyPage()">My Page</button>
+<button onclick="redirectToMyTicket()">My Ticket</button>
+
+<script>
+    const host = 'http://' + window.location.host;
+    function redirectToMyPage() {
+        alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
+        window.location.href = host + '/login-page?redirect=/mypage'
+    }
+
+    function redirectToMyTicket() {
+        alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
+        window.location.href = host + '/login-page?redirect=/ticket'
+    }
+</script>
+</body>
+</html>

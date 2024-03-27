@@ -22,65 +22,51 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final JwtUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/login");
-    }
+	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+		this.jwtUtil = jwtUtil;
+		setFilterProcessesUrl("/login");
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("로그인 시도");
-        try {
-            MemberRequestDto.LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), MemberRequestDto.LoginRequestDto.class);
-            log.info(requestDto.email());
-            log.info(requestDto.password());
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
+		AuthenticationException {
+		log.info("로그인 시도");
+		try {
+			MemberRequestDto.LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+				MemberRequestDto.LoginRequestDto.class);
+			log.info(requestDto.email());
+			log.info(requestDto.password());
 
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.email(),
-                            requestDto.password(),
-                            null
-                    )
-            );
-        } catch (IOException e) {
-            log.info(e.getMessage());
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
-    }
+			return getAuthenticationManager().authenticate(
+				new UsernamePasswordAuthenticationToken(
+					requestDto.email(),
+					requestDto.password(),
+					null
+				)
+			);
+		} catch (IOException e) {
+			log.info(e.getMessage());
+			throw new CustomException(ErrorCode.FORBIDDEN);
+		}
+	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        log.info("로그인 성공 및 JWT 생성");
-        String email = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+		Authentication authResult) throws IOException, ServletException {
+		log.info("로그인 성공 및 JWT 생성");
+		String email = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
+		String token = jwtUtil.createToken(email);
+		jwtUtil.addJwtToCookie(token, response);
+		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
-        String token = jwtUtil.createToken(email);
-        jwtUtil.addJwtToCookie(token, response);
-        log.info("JWT " + token);
+	}
 
-//        ResponseEntity.ok().body(ResponseDto.success("로그인", email));
-        response.setCharacterEncoding("UTF-8");
-        String responseDto = new ObjectMapper().writeValueAsString(
-                Map.of("resultCode", HttpServletResponse.SC_OK,
-                        "message", "로그인 성공",
-                        "email", email));
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.getWriter().write(responseDto);
-        response.getWriter().flush();
-        response.getWriter().close();
-    }
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+		log.info("로그인 실패");
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("로그인 실패");
-        response.setCharacterEncoding("UTF-8");
-        String responseDto = new ObjectMapper().writeValueAsString(Map.of("data", "BAD_REQUEST","message", "로그인 실패", "resultCode", HttpServletResponse.SC_BAD_REQUEST));
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setContentType("application/json");
-        response.getWriter().write(responseDto);
-        response.getWriter().flush();
-        response.getWriter().close();
-    }
+	}
 }

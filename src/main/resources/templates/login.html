@@ -57,19 +57,16 @@
         })
             .done(function (res, status, xhr) {
                 const token = xhr.getResponseHeader('Authorization');
-                console.log("token: " + token)
-
-                Cookies.set('Authorization', token, {path: '/'});
-
                 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                     jqXHR.setRequestHeader('Authorization', token);
                 });
 
                 const redirect = getParameterByName('redirect');
+                console.log("redirect: " + redirect)
                 if (redirect) {
                     window.location.href = host + redirect;
                 } else {
-                    window.location.href = host + '/login-page';
+                    window.location.href = host + '/home';
                 }
             })
             .fail(function (jqXHR, textStatus) {
