@@ -3,12 +3,13 @@ package com.example.pigonair.seat.entity;
 import com.example.pigonair.flight.entity.Flight;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Seat {
 	@Id
@@ -18,12 +19,12 @@ public class Seat {
 	@ManyToOne
 	private Flight flight;
 
-	private double price;
+	private Long price;
 	private int grade;
 	private boolean isAvailable;
 
 	@Builder
-	public Seat(Flight flight, double price, int grade, boolean isAvailable) {
+	public Seat(Flight flight, Long price, int grade, boolean isAvailable) {
 		this.flight = flight;
 		this.price = price;
 		this.grade = grade;
