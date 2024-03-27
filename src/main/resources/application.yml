@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: PigonAir
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/PigonAir #로컬 환경
+#    url:  #배포 환경
+    username: root
+    password:  #로컬 환경
+#    password:  # ec2
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
