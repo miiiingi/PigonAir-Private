@@ -1,4 +1,4 @@
-package com.example.pigonair.member.entity;
+package com.example.pigonair.domain.member.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

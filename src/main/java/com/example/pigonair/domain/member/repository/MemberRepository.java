@@ -1,11 +1,10 @@
-package com.example.pigonair.member.repository;
+package com.example.pigonair.domain.member.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.pigonair.member.entity.Member;
-
+import com.example.pigonair.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 

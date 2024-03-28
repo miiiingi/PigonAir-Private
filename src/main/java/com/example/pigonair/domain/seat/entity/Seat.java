@@ -1,6 +1,6 @@
-package com.example.pigonair.seat.entity;
+package com.example.pigonair.domain.seat.entity;
 
-import com.example.pigonair.flight.entity.Flight;
+import com.example.pigonair.domain.flight.entity.Flight;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

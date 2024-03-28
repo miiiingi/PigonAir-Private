@@ -1,4 +1,4 @@
-package com.example.pigonair.member.controller;
+package com.example.pigonair.domain.member.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -9,11 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.example.pigonair.domain.member.service.MemberService;
 import com.example.pigonair.global.config.common.exception.CustomException;
-import com.example.pigonair.member.dto.MemberRequestDto;
-import com.example.pigonair.member.service.MemberService;
+import com.example.pigonair.domain.member.dto.MemberRequestDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,10 +41,12 @@ public class MemberController {
 	public String homePage() {
 		return "home";
 	}
+
 	@GetMapping("/mypage")
 	public String myPage(@AuthenticationPrincipal UserDetails userDetails) {
 		return "mypage";
 	}
+
 	@GetMapping("/ticket")
 	public String myTicket(@AuthenticationPrincipal UserDetails userDetails) {
 		return "ticket";
@@ -61,6 +62,12 @@ public class MemberController {
 			return "signup";
 		}
 		return "redirect:/login-page";
+	}
+
+	@Operation(summary = "로그인", description = "로그인 시 필요한 정보를 입력합니다.")
+	@PostMapping("/login")
+	public void login(MemberRequestDto.LoginRequestDto requestDto) {
+
 	}
 
 	@GetMapping("/checkLogin")

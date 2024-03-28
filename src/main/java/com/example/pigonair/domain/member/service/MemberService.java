@@ -1,13 +1,13 @@
-package com.example.pigonair.member.service;
+package com.example.pigonair.domain.member.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
-import com.example.pigonair.member.dto.MemberRequestDto;
-import com.example.pigonair.member.entity.Member;
-import com.example.pigonair.member.repository.MemberRepository;
+import com.example.pigonair.domain.member.dto.MemberRequestDto;
+import com.example.pigonair.domain.member.entity.Member;
+import com.example.pigonair.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
