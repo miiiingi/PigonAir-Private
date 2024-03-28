@@ -28,18 +28,10 @@ public class SwaggerConfig {
                 .components(components);
     }
 
-//    @Bean
-//    public OpenAPI openAPI() {
-//        return new OpenAPI()
-//                .components(new Components())
-//                .info(apiInfo());
-//    }
-
-
     private Info apiInfo() {
         return new Info()
-                .title("스파르타 굿즈 판매 사이트") // API의 제목
-                .description("스파르타 굿즈 판매 사이트 API") // API에 대한 설명
+                .title("Pigon Air") // API의 제목
+                .description("Pigon Air API") // API에 대한 설명
                 .version("1.0.0"); // API의 버전
     }
 }
