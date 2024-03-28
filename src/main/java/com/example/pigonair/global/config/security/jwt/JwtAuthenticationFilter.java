@@ -1,6 +1,7 @@
 package com.example.pigonair.global.config.security.jwt;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			);
 		} catch (IOException e) {
 			log.info(e.getMessage());
-			throw new CustomException(ErrorCode.FORBIDDEN);
+			throw new CustomException(ErrorCode.INVALID_EMAIL_OR_PASSWORD);
 		}
 	}
 
@@ -64,6 +65,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
 		log.info("로그인 실패");
+		response.setCharacterEncoding("UTF-8");
+		String responseDto = new ObjectMapper().writeValueAsString(
+			Map.of("message", ErrorCode.INVALID_EMAIL_OR_PASSWORD.getMessage()));
+		response.setStatus(ErrorCode.INVALID_EMAIL_OR_PASSWORD.getHttpStatus().value());
+		response.setContentType("application/json");
+		response.getWriter().write(responseDto);
+		response.getWriter().flush();
+		response.getWriter().close();
+		throw new CustomException(ErrorCode.INVALID_EMAIL_OR_PASSWORD);
 
 	}
 }
