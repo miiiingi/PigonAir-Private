@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Figon Air</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+
+<body>
+
+<main>
+    <div id="login-form">
+        <label for="email">Email address</label>
+        <div class="form-floating">
+            <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com">
+        </div>
+        <label for="password">Password</label>
+        <div class="form-floating">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+        </div>
+
+        <button class="btn btn-primary w-100 py-2 mb-2" id="login-id-submit" onclick="onLogin()">로그인</button>
+
+        <div>
+            <button class="btn btn-primary w-100 py-2 mb-2" type="button" id="login-id-btn"
+                    onclick="location.href='/signup'">회원가입
+            </button>
+        </div>
+        <div id="login-failed" style="display: none; color: red;"></div> <!-- 추가: 로그인 실패 시 오류 메시지 표시 -->
+    </div>
+</main>
+
+
+<script>
+    $(document).ready(function () {
+        // 토큰 삭제
+        Cookies.remove('Authorization', {path: '/'});
+    });
+
+    const host = 'http://' + window.location.host;
+
+    function onLogin() {
+        let email = $('#email').val();
+        let password = $('#password').val();
+
+        $.ajax({
+            type: "POST",
+            url: `/login`,
+            contentType: "application/json",
+            data: JSON.stringify({email: email, password: password}),
+
+        })
+            .done(function (res, status, xhr) {
+                const token = xhr.getResponseHeader('Authorization');
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('Authorization', token);
+                });
+
+                console.log("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees")
+                const redirect = getParameterByName('redirect');
+                if (redirect) {
+                    window.location.href = host + redirect;
+                } else {
+                    window.location.href = host + '/login-page';
+                }
+            })
+            .fail(function (jqXHR, textStatus) {
+                const errorDiv = document.getElementById('login-failed');
+                errorDiv.innerText = jqXHR.responseJSON.message;
+                errorDiv.style.display = 'block';
+                $('#email').val('');
+                $('#password').val('');
+
+            });
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Home Page</h1>
+<button onclick="redirectToPage('/mypage')">My Page</button>
+<button onclick="redirectToPage('/ticket')">My Ticket</button>
+
+<script>
+    const host = 'http://' + window.location.host;
+
+    function redirectToPage(page) {
+        fetch('/checkLogin')
+            .then(response => response.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // 로그인되어 있는 경우 해당 페이지로 이동
+                    window.location.href = host + page;
+                } else {
+                    // 로그인되어 있지 않은 경우 로그인 페이지로 이동
+                    alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
+                    window.location.href = host + '/login-page?redirect=' + page;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+</script>
+</body>
+</html>
