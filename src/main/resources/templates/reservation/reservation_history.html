@@ -54,7 +54,7 @@
             color: #fff;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 17px;
             cursor: pointer;
         }
 
@@ -65,7 +65,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>좌석 선택 및 결제 - <span th:text="${member.name}"></span>님</h1>
+    <h1>좌석 선택 및 결제 </h1>
 
     <!-- 예약 정보를 보여주는 테이블 -->
     <table>
@@ -89,7 +89,7 @@
             <td th:text="${reservation.seatNumber}">좌석번호</td>
             <td><form action="/payment" method="post">
                 <input type="hidden" name="reservationId" th:value="${reservation.id}" />
-                <button type="submit" class="payment-button">결제하기</button>
+                <button type="submit" class="payment-button">결제</button>
             </form></td>
         </tr>
         </tbody>
