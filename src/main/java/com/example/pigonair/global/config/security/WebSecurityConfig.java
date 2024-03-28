@@ -19,6 +19,7 @@ import com.example.pigonair.global.config.security.jwt.JwtAuthorizationFilter;
 import com.example.pigonair.global.config.security.jwt.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
@@ -108,6 +109,21 @@ public class WebSecurityConfig {
 				.authenticationEntryPoint(customAuthenticationEntryPoint)
 				.accessDeniedHandler(customAccessDeniedHandler)
 			);
+
+		http.logout()
+			.logoutUrl("/logout")
+			.addLogoutHandler((request, response, authentication) -> {
+				// 사실 굳이 내가 세션 무효화하지 않아도 됨.
+				// LogoutFilter가 내부적으로 해줌.
+				HttpSession session = request.getSession();
+				if (session != null) {
+					session.invalidate();
+				}
+			})  // 로그아웃 핸들러 추가
+			.logoutSuccessHandler((request, response, authentication) -> {
+				response.setStatus(HttpServletResponse.SC_OK); // 응답 상태 변경
+			}) // 로그아웃 성공 핸들러
+			.deleteCookies(JwtUtil.AUTHORIZATION_HEADER); // 로그아웃 후 삭제할 쿠키 지정
 
 		return http.build();
 	}

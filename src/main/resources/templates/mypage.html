@@ -7,5 +7,26 @@
 </head>
 <body>
 <h1>My Page</h1>
+<button onclick="logout()">Logout</button>
+<script>
+    function logout() {
+        fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    alert("로그아웃 되었습니다.");
+                    window.location.href = '/login-page'; // 로그아웃 성공 시 리다이렉트
+                } else {
+                    alert("로그아웃에 실패했습니다.");
+
+                }
+
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+</script>
 </body>
 </html>
