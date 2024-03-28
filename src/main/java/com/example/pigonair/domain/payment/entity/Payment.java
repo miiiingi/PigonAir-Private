@@ -1,8 +1,8 @@
 package com.example.pigonair.domain.payment.entity;
 
-import com.example.pigonair.domain.flight.entity.Flight;
 import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.reservation.entity.Reservation;
+import com.example.pigonair.domain.flight.entity.Flight;
 import com.example.pigonair.domain.seat.entity.Seat;
 
 import jakarta.persistence.*;
