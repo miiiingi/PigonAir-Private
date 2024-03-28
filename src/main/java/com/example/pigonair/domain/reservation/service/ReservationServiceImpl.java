@@ -10,6 +10,7 @@ import com.example.pigonair.domain.member.repository.MemberRepository;
 import com.example.pigonair.domain.reservation.repository.ReservationRepository;
 import com.example.pigonair.domain.seat.repository.SeatRepository;
 import com.example.pigonair.domain.seat.entity.Seat;
+import com.example.pigonair.global.config.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +28,9 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
-    public void saveReservation(ReservationRequestDto requestDto, Long userId) {
-        Member member = memberRepository.findById(userId).orElseThrow(() ->
+    public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
+        //
+        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
                 new NullPointerException());
         Flight flight = flightRepository.findById(requestDto.flightId()).orElseThrow(() ->
                 new NullPointerException());
@@ -57,8 +59,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponseDto> getReservations(Long userId) {
-        Member member = memberRepository.findById(userId).orElseThrow(() ->
+    public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
+        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
                 new NullPointerException());
         List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
         List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
