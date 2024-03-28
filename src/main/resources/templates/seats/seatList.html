@@ -55,7 +55,7 @@
 <div id="seatLayout">
   <div class="seat-container">
     <div class="grid-layout">
-      <div th:each="seat, iterStat : ${seats.subList(0, seats.size()/2)}">
+      <div th:each="seat, iterStat : ${seats.subList(0, 40)}">
         <div th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
              class="seat"
              th:text="${seat.seatId}"
@@ -67,7 +67,7 @@
   </div>
   <div class="seat-container">
     <div class="grid-layout">
-      <div th:each="seat, iterStat : ${seats.subList((seats.size()/2), (seats.size()))}"
+      <div th:each="seat, iterStat : ${seats.subList(40, 80)}"
            th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
            class="seat"
            th:text="${seat.seatId}"
@@ -110,8 +110,12 @@
 
   function bookSelectedSeat() {
     if (selectedSeat !== null) {
-      // 선택된 좌석이 있으면 해당 좌석을 예약하기 링크로 이동
-      window.location.href = '예약하기 링크?seat=' + selectedSeatNumber;
+      // 선택된 좌석이 있으면 예약할 것인지 확인하는 메시지 표시
+      const confirmation = confirm('좌석 번호 ' + selectedSeatNumber + '을(를) 예약하시겠습니까?');
+      if (confirmation) {
+        // 사용자가 확인을 누르면 해당 좌석을 예약하기 링크로 이동
+        window.location.href = '예약하기 링크?seat=' + selectedSeatNumber;
+      }
     } else {
       // 선택된 좌석이 없으면 메시지 표시
       alert('좌석을 선택해주세요.');

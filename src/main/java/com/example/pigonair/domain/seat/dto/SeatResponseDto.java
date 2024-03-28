@@ -1,8 +1,6 @@
-package com.example.pigonair.seat.dto;
+package com.example.pigonair.domain.seat.dto;
 
-import com.example.pigonair.seat.entity.Seat;
-
-import lombok.Getter;
+import com.example.pigonair.domain.seat.entity.Seat;
 
 public record SeatResponseDto (
 	Long seatId,

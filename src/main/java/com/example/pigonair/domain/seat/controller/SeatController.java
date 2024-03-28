@@ -1,4 +1,4 @@
-package com.example.pigonair.seat.controller;
+package com.example.pigonair.domain.seat.controller;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.pigonair.seat.dto.SeatResponseDto;
-import com.example.pigonair.seat.service.SeatService;
+import com.example.pigonair.domain.seat.dto.SeatResponseDto;
+import com.example.pigonair.domain.seat.service.SeatService;
 
 import lombok.RequiredArgsConstructor;
 

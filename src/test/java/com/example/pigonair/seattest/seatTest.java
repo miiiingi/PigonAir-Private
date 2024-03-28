@@ -1,21 +1,15 @@
 package com.example.pigonair.seattest;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.pigonair.flight.entity.Flight;
-import com.example.pigonair.seat.entity.Seat;
-import com.example.pigonair.seat.repository.FlightRepository;
-import com.example.pigonair.seat.repository.SeatRepository;
+import com.example.pigonair.domain.flight.entity.Flight;
+import com.example.pigonair.domain.seat.entity.Seat;
+import com.example.pigonair.domain.seat.repository.FlightRepository;
+import com.example.pigonair.domain.seat.repository.SeatRepository;
 
 
 

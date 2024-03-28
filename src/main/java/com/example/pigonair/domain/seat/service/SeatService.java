@@ -1,13 +1,13 @@
-package com.example.pigonair.seat.service;
+package com.example.pigonair.domain.seat.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.pigonair.seat.dto.SeatResponseDto;
-import com.example.pigonair.seat.entity.Seat;
-import com.example.pigonair.seat.repository.SeatRepository;
+import com.example.pigonair.domain.seat.dto.SeatResponseDto;
+import com.example.pigonair.domain.seat.entity.Seat;
+import com.example.pigonair.domain.seat.repository.SeatRepository;
 
 import lombok.RequiredArgsConstructor;
 
