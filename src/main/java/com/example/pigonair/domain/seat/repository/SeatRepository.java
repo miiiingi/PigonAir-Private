@@ -1,9 +1,11 @@
 package com.example.pigonair.domain.seat.repository;
 
-import com.example.pigonair.domain.seat.entity.Seat;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
-public interface SeatRepository extends JpaRepository<Seat,Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.pigonair.domain.seat.entity.Seat;
+
+public interface SeatRepository extends JpaRepository<Seat, Long> {
+	List<Seat> findAllByflightId(Long flightId);
 }

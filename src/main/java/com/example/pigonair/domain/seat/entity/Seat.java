@@ -3,13 +3,14 @@ package com.example.pigonair.domain.seat.entity;
 import com.example.pigonair.domain.flight.entity.Flight;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 public class Seat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
