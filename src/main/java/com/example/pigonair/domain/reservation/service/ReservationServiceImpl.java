@@ -30,13 +30,16 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
         //
+
         Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
-                new NullPointerException());
-        Flight flight = flightRepository.findById(requestDto.flightId()).orElseThrow(() ->
                 new NullPointerException());
 
         Seat seat = seatRepository.findById(requestDto.seatId()).orElseThrow(() ->
                 new NullPointerException());
+
+        Flight flight = flightRepository.findById(seat.getFlight().getId()).orElseThrow(() ->
+                new NullPointerException());
+
 
         if (flight.getId() != seat.getFlight().getId()) {
             throw new IllegalArgumentException();

@@ -5,6 +5,7 @@ import com.example.pigonair.domain.reservation.dto.ReservationResponseDto;
 import com.example.pigonair.domain.reservation.service.ReservationService;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,14 @@ public class ReservationController {
     @PostMapping("/api/reservation") // 예약 진행
     public ResponseEntity<?> saveReservation(@RequestBody ReservationRequestDto requestDto,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {  // 로그인 기능 구현 완료 시 UserDetail 추가
-
-        reservationService.saveReservation(requestDto, userDetails);
-        return ResponseEntity.ok().build();
+        try{
+            reservationService.saveReservation(requestDto, userDetails);
+            return ResponseEntity.ok().build();
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     @GetMapping("/api/reservation") // 예약 진행
