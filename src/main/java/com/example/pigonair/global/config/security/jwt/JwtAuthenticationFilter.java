@@ -36,8 +36,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		try {
 			MemberRequestDto.LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
 				MemberRequestDto.LoginRequestDto.class);
-			log.info(requestDto.email());
-			log.info(requestDto.password());
 
 			return getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(

@@ -17,10 +17,8 @@
         fetch('/checkLogin')
             .then(response => response.json())
             .then(data => {
-                console.log("data: " + data);
                 if (data.loggedIn) {
                     // 로그인되어 있는 경우 해당 페이지로 이동
-                    console.log("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees")
                     window.location.href = host + page;
                 } else {
                     // 로그인되어 있지 않은 경우 로그인 페이지로 이동

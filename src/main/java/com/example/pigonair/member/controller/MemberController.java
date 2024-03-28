@@ -66,8 +66,6 @@ public class MemberController {
 	@GetMapping("/checkLogin")
 	public ResponseEntity<?> checkLogin(@AuthenticationPrincipal UserDetails userDetails) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		log.info("auth: " + auth);
-		log.info("isauthenticated: " + auth.isAuthenticated());
 		if (auth.isAuthenticated()) {
 			// 로그인된 상태이면 true를 반환
 			return ResponseEntity.ok().body("{\"loggedIn\": true}");

@@ -41,13 +41,11 @@
     });
 
     const host = 'http://' + window.location.host;
-    console.log(host);
 
     function onLogin() {
         let email = $('#email').val();
         let password = $('#password').val();
 
-        console.log("email: " + email);
         $.ajax({
             type: "POST",
             url: `/login`,
@@ -62,7 +60,6 @@
                 });
 
                 const redirect = getParameterByName('redirect');
-                console.log("redirect: " + redirect)
                 if (redirect) {
                     window.location.href = host + redirect;
                 } else {
