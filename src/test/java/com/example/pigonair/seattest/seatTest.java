@@ -7,8 +7,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pigonair.domain.flight.entity.Flight;
+import com.example.pigonair.domain.flight.repository.FlightRepository;
 import com.example.pigonair.domain.seat.entity.Seat;
-import com.example.pigonair.domain.seat.repository.FlightRepository;
 import com.example.pigonair.domain.seat.repository.SeatRepository;
 
 
