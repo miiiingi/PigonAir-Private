@@ -26,7 +26,7 @@ public class WebSecurityConfig {
 	private static final String[] APP_WHITE_LIST = {
 		"/signup",
 		"/login-page",
-		"/mypage"
+		"/home"
 	};
 
 	private static final String[] SWAGGER_URL_ARRAY = {

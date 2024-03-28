@@ -7,20 +7,33 @@
 </head>
 <body>
 <h1>Home Page</h1>
-<button onclick="redirectToMyPage()">My Page</button>
-<button onclick="redirectToMyTicket()">My Ticket</button>
+<button onclick="redirectToPage('/mypage')">My Page</button>
+<button onclick="redirectToPage('/ticket')">My Ticket</button>
 
 <script>
     const host = 'http://' + window.location.host;
-    function redirectToMyPage() {
-        alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
-        window.location.href = host + '/login-page?redirect=/mypage'
+
+    function redirectToPage(page) {
+        fetch('/checkLogin')
+            .then(response => response.json())
+            .then(data => {
+                console.log("data: " + data);
+                if (data.loggedIn) {
+                    // 로그인되어 있는 경우 해당 페이지로 이동
+                    console.log("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees")
+                    window.location.href = host + page;
+                } else {
+                    // 로그인되어 있지 않은 경우 로그인 페이지로 이동
+                    alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
+                    window.location.href = host + '/login-page?redirect=' + page;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
-    function redirectToMyTicket() {
-        alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
-        window.location.href = host + '/login-page?redirect=/ticket'
-    }
+
 </script>
 </body>
 </html>

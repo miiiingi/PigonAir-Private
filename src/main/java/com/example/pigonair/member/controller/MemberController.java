@@ -1,9 +1,15 @@
 package com.example.pigonair.member.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.member.dto.MemberRequestDto;
@@ -32,19 +38,17 @@ public class MemberController {
 		return "login";
 	}
 
-	@GetMapping("/mypage")
-	public String myPage() {
-		return "mypage";
-	}
-
-	@GetMapping("/ticket")
-	public String ticket() {
-		return "ticket";
-	}
-
 	@GetMapping("/home")
 	public String homePage() {
 		return "home";
+	}
+	@GetMapping("/mypage")
+	public String myPage(@AuthenticationPrincipal UserDetails userDetails) {
+		return "mypage";
+	}
+	@GetMapping("/ticket")
+	public String myTicket(@AuthenticationPrincipal UserDetails userDetails) {
+		return "ticket";
 	}
 
 	@Operation(summary = "회원가입", description = "회원 가입시 필요한 정보를 입력합니다.")
@@ -57,6 +61,20 @@ public class MemberController {
 			return "signup";
 		}
 		return "redirect:/login-page";
+	}
+
+	@GetMapping("/checkLogin")
+	public ResponseEntity<?> checkLogin(@AuthenticationPrincipal UserDetails userDetails) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		log.info("auth: " + auth);
+		log.info("isauthenticated: " + auth.isAuthenticated());
+		if (auth.isAuthenticated()) {
+			// 로그인된 상태이면 true를 반환
+			return ResponseEntity.ok().body("{\"loggedIn\": true}");
+		} else {
+			// 로그인되지 않은 상태이면 false를 반환
+			return ResponseEntity.ok().body("{\"loggedIn\": false}");
+		}
 	}
 
 }
