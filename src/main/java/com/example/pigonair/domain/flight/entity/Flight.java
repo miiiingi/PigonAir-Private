@@ -20,11 +20,11 @@ public class Flight {
 	private Long id;
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
-	private String origin;
-	private String destination;
+	private Airport origin;
+	private Airport destination;
 
 	@Builder
-	public Flight(LocalDateTime departureTime, LocalDateTime arrivalTime, String origin, String destination) {
+	public Flight(LocalDateTime departureTime, LocalDateTime arrivalTime, Airport origin, Airport destination) {
 		this.departureTime = departureTime;
 		this.arrivalTime = arrivalTime;
 		this.origin = origin;

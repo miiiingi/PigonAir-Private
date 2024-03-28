@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Search</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1519974719765-e6559eac2575');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        h2 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            color: #ffffff;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        button.btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<button onclick="redirectToPage('/home')">Home</button>
+
+<div class="container mt-5">
+    <h2>Flight Search</h2>
+    <form id="flightSearchForm">
+        <div class="row mb-3">
+            <label for="startDate" class="col-sm-2 col-form-label">Start Date:</label>
+            <div class="col-sm-4">
+                <input type="datetime-local" class="form-control" id="startDate" name="start_date">
+            </div>
+            <label for="endDate" class="col-sm-2 col-form-label">End Date:</label>
+            <div class="col-sm-4">
+                <input type="datetime-local" class="form-control" id="endDate" name="end_date">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="departure" class="col-sm-2 col-form-label">Departure:</label>
+            <div class="col-sm-4">
+                <select class="form-select" id="departure" name="departure">
+                    <option value="">Select Departure Airport</option>
+                    <!-- Add options dynamically using JavaScript -->
+                </select>
+            </div>
+            <label for="destination" class="col-sm-2 col-form-label">Destination:</label>
+            <div class="col-sm-4">
+                <select class="form-select" id="destination" name="destination">
+                    <option value="">Select Destination Airport</option>
+                    <!-- Add options dynamically using JavaScript -->
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <button type="button" onclick="submitFlightSearchForm()" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    const departureSelect = document.getElementById('departure');
+    const destinationSelect = document.getElementById('destination');
+
+    function populateAirportOptions() {
+        const airports = [
+            { code: 'JFK', name: '존 F. 케네디 국제공항 수정확인' },
+            { code: 'LAX', name: '로스앤젤레스 국제공항' },
+            { code: 'ORD', name: '오헤어 국제공항' },
+            { code: 'ATL', name: '하트스필드-잭슨 애틀랜타 국제공항' },
+            { code: 'DXB', name: '두바이 국제공항' },
+            { code: 'LHR', name: '히드로 공항' },
+            { code: 'CDG', name: '샤를 드 골 공항' },
+            { code: 'AMS', name: '스키폴 공항' },
+            { code: 'SIN', name: '싱가포르 창이공항' },
+            { code: 'PEK', name: '베이징首都 국제공항' },
+            { code: 'ICN', name: '인천국제공항' },
+            { code: 'SYD', name: '시드니 공항' },
+            { code: 'FRA', name: '프랑크푸르트 공항' },
+            { code: 'DEN', name: '덴버 국제공항' },
+            { code: 'SFO', name: '샌프란시스코 국제공항' },
+            { code: 'HND', name: '도쿄 하네다 공항' },
+            { code: 'GMP', name: '김포 국제공항' },
+            { code: 'CJJ', name: '청주 국제공항' },
+            { code: 'CJU', name: '제주 국제공항' }
+        ];
+
+        airports.forEach(airport => {
+            const option = new Option(airport.name, airport.code);
+            departureSelect.appendChild(option);
+            destinationSelect.appendChild(option.cloneNode(true));
+        });
+    }
+
+    populateAirportOptions();
+</script>
+<button onclick="redirectToPage('/login-page')">Login</button>
+<button onclick="redirectToPage('/mypage')">My Page</button>
+<button onclick="redirectToPage('/ticket')">My Ticket</button>
+<!--적용하기-->
+
+<script>
+    const host = 'http://' + window.location.host;
+
+    function redirectToPage(page) {
+        fetch('/checkLogin')
+            .then(response => response.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // 로그인되어 있는 경우 해당 페이지로 이동
+                    window.location.href = host + page;
+                } else {
+                    // 로그인되어 있지 않은 경우 로그인 페이지로 이동
+                    alert("회원 검증을 위해 로그인 페이지로 이동합니다.");
+                    window.location.href = host + '/login-page?redirect=' + page;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+</script>
+
+<script>
+    function submitFlightSearchForm() {
+        // Get form data
+        var formData = new FormData(document.getElementById("flightSearchForm"));
+
+        // Construct URL with formatted datetime values
+        var startDate = formData.get("start_date").replace("T", " ") + ":00";
+        var endDate = formData.get("end_date").replace("T", " ") + ":00";
+        var departure = formData.get("departure");
+        var destination = formData.get("destination");
+
+        // Format date-time values in ISO 8601 format
+        var formattedStartDate = startDate.replace(" ", "T");
+        var formattedEndDate = endDate.replace(" ", "T");
+
+        // Redirect to the constructed URL
+        window.location.href = "/flight/" + formattedStartDate + "/" + formattedEndDate + "/" + departure + "/" + destination;
+    }
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

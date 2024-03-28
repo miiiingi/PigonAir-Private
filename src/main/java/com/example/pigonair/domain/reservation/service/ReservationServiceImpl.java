@@ -68,8 +68,8 @@ public class ReservationServiceImpl implements ReservationService {
             Flight flight = reservation.getFlight();
             LocalDateTime departureDate = flight.getDepartureTime();
             LocalDateTime departureTime = flight.getDepartureTime();
-            String origin = flight.getOrigin();
-            String destination = flight.getDestination();
+            String origin = flight.getOrigin().getFullName();
+            String destination = flight.getDestination().getFullName();
             Long seatNumber = reservation.getSeat().getId();
             reservationResponseDtos.add(new ReservationResponseDto(id, name, departureDate, departureTime,
                     origin, destination, seatNumber));
