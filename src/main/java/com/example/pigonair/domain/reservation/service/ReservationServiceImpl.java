@@ -5,10 +5,10 @@ import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.reservation.dto.ReservationRequestDto;
 import com.example.pigonair.domain.reservation.dto.ReservationResponseDto;
 import com.example.pigonair.domain.reservation.entity.Reservation;
-import com.example.pigonair.domain.reservation.repository.FlightRepository;
-import com.example.pigonair.domain.reservation.repository.MemberRepository;
+import com.example.pigonair.domain.flight.repository.FlightRepository;
+import com.example.pigonair.domain.member.repository.MemberRepository;
 import com.example.pigonair.domain.reservation.repository.ReservationRepository;
-import com.example.pigonair.domain.reservation.repository.SeatRepository;
+import com.example.pigonair.domain.seat.repository.SeatRepository;
 import com.example.pigonair.domain.seat.entity.Seat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .isPayment(false)
                 .build();
 
-        
+
         reservationRepository.save(reservation);
     }
 
