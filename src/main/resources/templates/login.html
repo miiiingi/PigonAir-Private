@@ -60,12 +60,11 @@
                     jqXHR.setRequestHeader('Authorization', token);
                 });
 
-                console.log("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees")
                 const redirect = getParameterByName('redirect');
                 if (redirect) {
                     window.location.href = host + redirect;
                 } else {
-                    window.location.href = host + '/login-page';
+                    window.location.href = host + '/home';
                 }
             })
             .fail(function (jqXHR, textStatus) {
