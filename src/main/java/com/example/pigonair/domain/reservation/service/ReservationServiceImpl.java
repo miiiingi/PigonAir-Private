@@ -54,6 +54,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .isPayment(false)
                 .build();
 
+        seat.seatPick();
+
 
         reservationRepository.save(reservation);
     }
