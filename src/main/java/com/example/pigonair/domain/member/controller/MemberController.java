@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.pigonair.domain.member.service.MemberService;
+import com.example.pigonair.domain.member.service.MemberServiceImpl;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.domain.member.dto.MemberRequestDto;
 
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "User API", description = "회원가입, 로그인")
 @RequiredArgsConstructor
 public class MemberController {
-	private final MemberService memberService;
+	private final MemberServiceImpl memberServiceImpl;
 
 	@GetMapping("/signup")
 	public String signupPage(Model model) {
@@ -56,7 +56,7 @@ public class MemberController {
 	@PostMapping("/signup")
 	public String signup(MemberRequestDto.SignupRequestDto requestDto, Model model) {
 		try {
-			memberService.signUp(requestDto);
+			memberServiceImpl.signUp(requestDto);
 		} catch (CustomException ex) {
 			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
 			return "signup";
