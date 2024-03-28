@@ -48,10 +48,12 @@
                 </div>
 
                 <!-- 회원 가입 버튼 -->
-                <button id="signup-btn" onclick="submitForm()">회원 가입</button>
+                <button id="signup-btn" onclick="submitForm()">제출</button>
 
 
             </form>
+            <!-- 홈 화면으로 이동하는 버튼 -->
+            <button onclick="goToHomePage()">홈 화면으로 이동</button>
         </div>
     </div>
 </div>
@@ -81,7 +83,6 @@
         messageDiv.style.color = color;
     }
 
-
     // 회원 가입 폼 전송
     function submitForm() {
         let email = document.getElementById("email").value;
@@ -90,6 +91,11 @@
             return false;
         }
         return true;
+    }
+
+    // 홈 화면으로 이동
+    function goToHomePage() {
+        window.location.href = '/home';
     }
 </script>
 </body>
