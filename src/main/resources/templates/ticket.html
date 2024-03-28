@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>예매 정보</title>
@@ -60,13 +60,11 @@
     <h1>예매 정보</h1>
     <div class="reservation-info-container">
         <div class="reservation-info">
-            <p><strong>예매 번호:</strong> <span th:text="${responseDto.reservation.id}"></span></p>
-            <p><strong>출발일:</strong> <span
-                    th:text="${#temporals.format(responseDto.reservation.flight.departureTime, 'yyyy-MM-dd')}"></span>
-            </p>
-            <p><strong>출발지:</strong> <span th:text="${responseDto.reservation.flight.origin}"></span></p>
-            <p><strong>도착지:</strong> <span th:text="${responseDto.reservation.flight.destination}"></span></p>
-            <p><strong>탑승자 이름:</strong> <span th:text="${responseDto.reservation.member.name}"></span></p>
+            <p><strong>예매 번호:</strong> [[${responseDto.reservationId}]]</p>
+            <p><strong>출발일:</strong>[[${responseDto.departureTime}]]</p>
+            <p><strong>출발지:</strong>[[${responseDto.origin}]]</p>
+            <p><strong>도착지:</strong>[[${responseDto.destination}]]</p>
+            <p><strong>탑승자 이름:</strong>[[${responseDto.name}]]</p>
         </div>
     </div>
     <div class="btn-container">
