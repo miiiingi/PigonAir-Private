@@ -1,7 +1,6 @@
 package com.example.pigonair.global.config.security.jwt;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,7 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
-import com.example.pigonair.member.dto.MemberRequestDto;
+import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;

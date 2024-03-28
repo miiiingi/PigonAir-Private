@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.pigonair.member.entity.Member;
-import com.example.pigonair.member.repository.MemberRepository;
+import com.example.pigonair.domain.member.entity.Member;
+import com.example.pigonair.domain.member.repository.MemberRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
