@@ -1,21 +1,17 @@
 package com.example.pigonair.domain.payment.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.reservation.entity.Reservation;
+import com.example.pigonair.domain.flight.entity.Flight;
+import com.example.pigonair.domain.seat.entity.Seat;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,22 +24,28 @@ public class Payment {
 	@OneToOne
 	private Reservation reservation;
 
+	@ManyToOne
+	private Member member;
+
+	@ManyToOne
+	private Seat seat;
+
+	@ManyToOne
+	private Flight flight;
+
 	private String serialNumber;
-
-	@CreationTimestamp
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdAt;
-
-	private boolean isCanceled = false;
+	private boolean isCancelled;
 
 	@Builder
-	public Payment(Reservation reservation, String serialNumber) {
+	public Payment(Reservation reservation, Member member, Seat seat, Flight flight, String serialNumber,
+		LocalDateTime createdAt, boolean isCancelled) {
 		this.reservation = reservation;
+		this.member = member;
+		this.seat = seat;
+		this.flight = flight;
 		this.serialNumber = serialNumber;
+		this.createdAt = createdAt;
+		this.isCancelled = isCancelled;
 	}
-
-	public void updateIsCanceled() {
-		this.isCanceled = true;
-	}
-
 }

@@ -1,8 +1,4 @@
 package com.example.pigonair.domain.flight.entity;
-
-import lombok.Getter;
-
-@Getter
 public enum Airport {
 	JFK("John F. Kennedy International Airport"),
 	LAX("Los Angeles International Airport"),
@@ -30,4 +26,7 @@ public enum Airport {
 		this.fullName = fullName;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
 }

@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.example.pigonair.domain.member.service.MemberServiceImpl;
-import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.global.config.common.exception.CustomException;
-import com.example.pigonair.global.config.security.UserDetailsImpl;
+import com.example.pigonair.domain.member.dto.MemberRequestDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,9 +49,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/ticket")
-	public String myTicket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-		TicketResponseDto responseDto = memberServiceImpl.getTicketPage(userDetails.getUser());
-		model.addAttribute("responseDto", responseDto);
+	public String myTicket(@AuthenticationPrincipal UserDetails userDetails) {
 		return "ticket";
 	}
 
