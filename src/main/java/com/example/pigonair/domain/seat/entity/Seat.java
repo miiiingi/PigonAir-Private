@@ -30,4 +30,9 @@ public class Seat {
 		this.grade = grade;
 		this.isAvailable = isAvailable;
 	}
+
+	public void seatPick(){
+		if(this.isAvailable)
+			this.isAvailable = false;
+	}
 }
