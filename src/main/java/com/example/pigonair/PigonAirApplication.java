@@ -6,7 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
+
 @EnableJpaAuditing
+@OpenAPIDefinition(servers = {@Server(url = "https://52.78.141.125.nip.io", description = "hh99finalproject")})
 @SpringBootApplication
 public class PigonAirApplication {
 	public static void main(String[] args) {
