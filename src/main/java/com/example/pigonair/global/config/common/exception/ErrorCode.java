@@ -15,8 +15,8 @@ public enum ErrorCode {
 
 	RESERVATION_NOT_FOUND("RESERVATION_NOT_FOUND", "해당 예약을 찾을 수 없습니다", HttpStatus.NOT_FOUND),
 	PAYMENT_AMOUNT_MISMATCH("PAYMENT_AMOUNT_MISMATCH", "결제 금액과 선택한 좌석의 가격이 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
-	ALREADY_PAID_RESERVATION("ALREADY_PAID_RESERVATION", "이미 결제된 예약입니다.", HttpStatus.BAD_REQUEST);
-
+	ALREADY_PAID_RESERVATION("ALREADY_PAID_RESERVATION", "이미 결제된 예약입니다.", HttpStatus.BAD_REQUEST),
+	UNAVAILABLE_SEAT("UNAVAILABLE_SEAT", "이용 불가능한 좌석입니다.", HttpStatus.BAD_REQUEST);
 	private final String key;
 	private final String message;
 	private final HttpStatus httpStatus;

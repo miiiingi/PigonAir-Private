@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.example.pigonair.reservation.entity.Reservation;
+import com.example.pigonair.domain.reservation.entity.Reservation;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

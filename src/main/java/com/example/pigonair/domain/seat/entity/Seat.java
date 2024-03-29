@@ -2,7 +2,11 @@ package com.example.pigonair.domain.seat.entity;
 
 import com.example.pigonair.domain.flight.entity.Flight;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +33,9 @@ public class Seat {
 		this.price = price;
 		this.grade = grade;
 		this.isAvailable = isAvailable;
+	}
+
+	public void updateIsAvailable() {
+		this.isAvailable = false;
 	}
 }

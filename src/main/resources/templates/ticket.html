@@ -56,7 +56,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" th:if="${responseDto.reservationId != null}">
     <h1>예매 정보</h1>
     <div class="reservation-info-container">
         <div class="reservation-info">
@@ -65,10 +65,18 @@
             <p><strong>출발지:</strong>[[${responseDto.origin}]]</p>
             <p><strong>도착지:</strong>[[${responseDto.destination}]]</p>
             <p><strong>탑승자 이름:</strong>[[${responseDto.name}]]</p>
+            <p><strong>결제 여부:</strong>[[${responseDto.isPayment} ? '결제 완료' : '미결제']]</p>
         </div>
     </div>
     <div class="btn-container">
-        <a href="#" class="btn btn-primary">확인</a>
+        <a href="/home" class="btn btn-primary">확인</a>
+    </div>
+</div>
+<div class="container" th:unless="${responseDto.reservationId != null}">
+    <h1>예매 정보</h1>
+    <p>예약된 티켓이 없습니다.</p>
+    <div class="btn-container">
+        <a href="/home" class="btn btn-primary">확인</a>
     </div>
 </div>
 </body>

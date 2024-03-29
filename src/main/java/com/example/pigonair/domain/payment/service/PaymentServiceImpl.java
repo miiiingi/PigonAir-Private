@@ -7,13 +7,14 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.pigonair.domain.payment.dto.PaymentRequestDto;
-import com.example.pigonair.domain.payment.dto.PaymentResponseDto;
+import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
+import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.domain.payment.entity.Payment;
 import com.example.pigonair.domain.payment.repository.PaymentRepository;
+import com.example.pigonair.domain.reservation.entity.Reservation;
 import com.example.pigonair.domain.reservation.repository.ReservationRepository;
+import com.example.pigonair.domain.seat.entity.Seat;
 import com.example.pigonair.global.config.common.exception.CustomException;
-import com.example.pigonair.reservation.entity.Reservation;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	@Transactional
-	public PaymentResponseDto.TicketResponseDto postPayProcess(PaymentRequestDto.PostPayRequestDto requestDto) {
+	public TicketResponseDto postPayProcess(PostPayRequestDto requestDto) {
 		Optional<Reservation> optionalReservation = reservationRepository.findById(requestDto.id());
 		if (optionalReservation.isEmpty()) {
 			// 예약을 찾지 못함 에러
@@ -42,9 +43,12 @@ public class PaymentServiceImpl implements PaymentService {
 
 		//결제 후 결제 여부 변경
 		reservation.updateIsPayment();
+		//결제 정보 생성
 		savePayInfo(requestDto.serialNumber(), reservation);
+		//좌석 이용불가 변경
+		updateSeatUnAvailable(reservation);
 
-		return new PaymentResponseDto.TicketResponseDto(reservation);
+		return new TicketResponseDto(reservation);
 	}
 
 	@Override
@@ -55,5 +59,14 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new CustomException(ALREADY_PAID_RESERVATION);
 		}
 		paymentRepository.save(payment);
+	}
+
+	@Transactional
+	public void updateSeatUnAvailable(Reservation reservation) {
+		Seat seat = reservation.getSeat();
+		if (!seat.isAvailable()) {
+			throw new CustomException(UNAVAILABLE_SEAT);
+		}
+		seat.updateIsAvailable();
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.pigonair.reservation.entity;
+package com.example.pigonair.domain.reservation.entity;
 
 import java.time.LocalDateTime;
 

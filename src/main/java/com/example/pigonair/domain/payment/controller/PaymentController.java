@@ -17,10 +17,11 @@ public class PaymentController {
 
 	private final PaymentServiceImpl paymentService;
 
-	@PostMapping("/ticket")
+	@PostMapping("/pay")
 	public String postPay(@RequestBody PostPayRequestDto requestDto, Model model) {
 		PaymentResponseDto.TicketResponseDto responseDto = paymentService.postPayProcess(requestDto);
 		model.addAttribute("responseDto", responseDto);
 		return "ticket";
 	}
+
 }
