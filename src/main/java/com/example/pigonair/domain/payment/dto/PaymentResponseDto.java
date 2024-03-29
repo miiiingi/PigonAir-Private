@@ -2,14 +2,15 @@ package com.example.pigonair.domain.payment.dto;
 
 import java.time.LocalDateTime;
 
+import com.example.pigonair.domain.flight.entity.Airport;
 import com.example.pigonair.domain.reservation.entity.Reservation;
 
 public class PaymentResponseDto {
 	public record TicketResponseDto(
 		Long reservationId,
 		LocalDateTime departureTime,
-		String origin,
-		String destination,
+		Airport origin,
+		Airport destination,
 		String name,
 		boolean isPayment
 	) {
