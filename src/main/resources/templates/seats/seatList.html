@@ -51,7 +51,6 @@
   </style>
 </head>
 <body>
-
 <div id="seatLayout">
   <div class="seat-container">
     <div class="grid-layout">
@@ -60,6 +59,7 @@
              class="seat"
              th:text="${seat.seatId}"
              th:if="${seat.isAvailable}"
+             th:attr="data-seat-id=${seat.seatId}"
              onclick="toggleSeatSelection(this)">
         </div>
       </div>
@@ -72,6 +72,7 @@
            class="seat"
            th:text="${seat.seatId}"
            th:if="${seat.isAvailable}"
+           th:attr="data-seat-id=${seat.seatId}"
            onclick="toggleSeatSelection(this)">
       </div>
     </div>
@@ -82,7 +83,7 @@
 <script>
   let selectedSeat = null;
   let selectedSeatNumber = null;
-
+  let selectedFlight = null;
 
   function toggleSeatSelection(seatElement) {
     if (selectedSeat === null) {
@@ -95,6 +96,12 @@
         seatElement.classList.add('not-available');
         selectedSeat = seatElement;
         selectedSeatNumber = seatNumber;
+        selectedFlight = seatElement.getAttribute('data-flight'); // Thymeleaf에서 data-flight로 설정한 속성 가져오기
+        // JSON 데이터 출력
+        console.log({
+          seat: selectedSeatNumber,
+          flight: selectedFlight
+        });
       }
     } else if (selectedSeat === seatElement) {
       // 이미 선택된 좌석을 다시 클릭한 경우 선택 취소
@@ -102,6 +109,7 @@
       seatElement.classList.add('available');
       selectedSeat = null;
       selectedSeatNumber = null;
+      selectedFlight = null;
     } else {
       // 이미 다른 좌석이 선택된 경우 메시지 표시
       alert('이미 좌석을 선택하셨습니다.');
@@ -114,7 +122,34 @@
       const confirmation = confirm('좌석 번호 ' + selectedSeatNumber + '을(를) 예약하시겠습니까?');
       if (confirmation) {
         // 사용자가 확인을 누르면 해당 좌석을 예약하기 링크로 이동
-        window.location.href = '예약하기 링크?seat=' + selectedSeatNumber;
+        const data = {
+          seatId: selectedSeatNumber,
+          flightId: selectedFlight
+        };
+        fetch('/api/reservation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then(response => {
+          if (response.ok) {
+            // 서버에서 응답을 받은 후 처리
+            window.location.href = '/api/reservation';
+          } else if (response.status === 404) {
+            // 404 Not Found 에러 처리
+            alert('잘못된 요청입니다');
+          } else if (response.status === 409) {
+            // 400 Bad Request 에러 처리
+            alert('이미 선택된 좌석입니다');
+          } else {
+            // 기타 오류 처리
+            alert('예약을 처리하는 동안 문제가 발생했습니다.');
+          }
+        }).catch(error => {
+          console.error('Error:', error);
+          alert('예약을 처리하는 동안 문제가 발생했습니다.');
+        });
       }
     } else {
       // 선택된 좌석이 없으면 메시지 표시

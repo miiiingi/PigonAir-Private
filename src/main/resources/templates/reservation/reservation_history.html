@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 대기 화면</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .payment-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .payment-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>좌석 선택 및 결제 </h1>
+
+    <!-- 예약 정보를 보여주는 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th>날짜</th>
+            <th>출발 시간</th>
+            <th>출발지</th>
+            <th>목적지</th>
+            <th>좌석 번호</th>
+            <th>결제하기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 타임리프를 사용하여 reservations 모델을 렌더링 -->
+        <tr th:each="reservation : ${reservations}">
+            <td th:text="${reservation.departureDate}">날짜</td>
+            <td th:text="${reservation.departureTime}">출발 시간</td>
+            <td th:text="${reservation.origin}">출발지</td>
+            <td th:text="${reservation.destination}">목적지</td>
+            <td th:text="${reservation.seatNumber}">좌석번호</td>
+            <td><form action="/payment" method="post">
+                <input type="hidden" name="reservationId" th:value="${reservation.id}" />
+                <button type="submit" class="payment-button">결제</button>
+            </form></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
