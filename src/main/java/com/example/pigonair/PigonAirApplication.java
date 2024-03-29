@@ -1,7 +1,6 @@
 package com.example.pigonair;
 
 
-import com.example.pigonair.domain.flight.service.FlightDataGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
