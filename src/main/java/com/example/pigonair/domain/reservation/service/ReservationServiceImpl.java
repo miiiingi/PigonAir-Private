@@ -13,6 +13,7 @@ import com.example.pigonair.domain.seat.entity.Seat;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,27 +29,51 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     @Override
+    @Transactional
     public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
-        //
 
-        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
-                new NullPointerException());
+        Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
 
         Seat seat = seatRepository.findById(requestDto.seatId()).orElseThrow(() ->
-                new NullPointerException());
+                new NullPointerException());    // 좌석 정보 확인 및 가져오기
 
         Flight flight = flightRepository.findById(seat.getFlight().getId()).orElseThrow(() ->
+                new NullPointerException());    // 비행기 가져오기
+
+        checkIsAvailableSeat(seat); // 예약 가능한 좌석인지 확인
+
+        Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
+        seat.seatPick();    // 좌석 예매 불가로 변경
+        reservationRepository.save(reservation);
+    }
+
+    @Override
+    public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
+        // 로그인 정보 확인 및 가져오기
+        Member member = getMember(userDetails);
+        // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
+        List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
+        // responseDto 만들기
+        List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
+
+        return reservationResponseDtos;
+    }
+
+    // --------------------------private method--------------------------
+
+    private Member getMember(UserDetailsImpl userDetails) {
+        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
                 new NullPointerException());
+        return member;
+    }
 
-
-        if (flight.getId() != seat.getFlight().getId()) {
-            throw new IllegalArgumentException();
-        }
-
+    private static void checkIsAvailableSeat(Seat seat) {
         if (!seat.isAvailable()) {
             throw new IllegalArgumentException();
         }
+    }
 
+    private static Reservation makeReservation(Member member, Seat seat, Flight flight) {
         Reservation reservation = Reservation.builder()
                 .member(member)
                 .seat(seat)
@@ -56,18 +81,10 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservationDate(LocalDateTime.now())
                 .isPayment(false)
                 .build();
-
-        seat.seatPick();
-
-
-        reservationRepository.save(reservation);
+        return reservation;
     }
 
-    @Override
-    public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
-        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
-                new NullPointerException());
-        List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
+    private static List<ReservationResponseDto> getReservationResponseDtos(List<Reservation> reservations) {
         List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
         reservations.stream().forEach(reservation -> {
             Long id = reservation.getId();
@@ -82,7 +99,6 @@ public class ReservationServiceImpl implements ReservationService {
                     origin, destination, seatNumber));
 
         });
-
         return reservationResponseDtos;
     }
 }
