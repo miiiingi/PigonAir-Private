@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -38,5 +39,11 @@ public class Seat {
 	public void seatPick(){
 		if(this.isAvailable)
 			this.isAvailable = false;
+	}
+
+	public void setIsAvailable() {
+		if(!this.isAvailable){
+			this.isAvailable = true;
+		}
 	}
 }
