@@ -1,13 +1,16 @@
 package com.example.pigonair.global.config.common.exception;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.pigonair.global.config.common.dto.response.ResponseDto;
@@ -28,5 +31,11 @@ public class CustomExceptionHandler {
                                 ErrorCode.VALIDATION_ERROR.getMessage(),
                                 errors)
         );
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleDateTimeFormatException(DateTimeParseException ex) {
+        return ResponseEntity.badRequest().body("불가능한 DateTime 형식입니다. ISO 형식에 맞게 다시 입력해주세요.");
     }
 }

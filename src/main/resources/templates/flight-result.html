@@ -20,7 +20,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 0 auto; /* Center the table horizontally */
         }
 
         th, td {
@@ -37,11 +37,21 @@
         tr:hover {
             background-color: #f2f2f2;
         }
+        /* Center pagination */
+        .pagination-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Style pagination buttons */
+        .pagination-container button {
+            margin: 0 5px; /* Adjust as needed */
+        }
     </style>
 </head>
 <body>
 <h1>Flight Search Results</h1>
-<form action="#" method="get">
+<form action="" method="get">
     <div>
         <label for="orderBy">Order By:</label>
         <select name="orderBy" id="orderBy">
@@ -77,7 +87,9 @@
     <thead>
     <tr>
         <th>Flight ID</th>
+        <th>Departure Date</th>
         <th>Departure Time</th>
+        <th>Arrival Date</th>
         <th>Arrival Time</th>
         <th>Origin</th>
         <th>Destination</th>
@@ -88,34 +100,47 @@
     <!-- 비행 정보 루프 -->
     <tr th:each="flight : ${flights}">
         <td th:text="${flight.id}"></td>
-        <td th:text="${flight.departureTime}"></td>
-        <td th:text="${flight.arrivalTime}"></td>
+        <!-- Parse and format departure date and time -->
+        <td th:text="${#temporals.format(flight.departureTime, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(flight.departureTime, 'HH시 MM분')}"></td>
+        <!-- Parse and format arrival date and time -->
+        <td th:text="${#temporals.format(flight.arrivalTime, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(flight.arrivalTime, 'HH시 MM분')}"></td>
         <td th:text="${flight.origin}"></td>
         <td th:text="${flight.destination}"></td>
         <td>
-            <a th:href="@{'/api/flight/' + ${flight.id}}">좌석 선택</a>
+            <a th:href="@{'/api/flight/' + ${flight.id}}">Select Seats</a>
         </td>
     </tr>
     </tbody>
 </table>
-<div th:if="${totalPages > 1}">
+
+<div th:if="${totalPages > 1}" class="pagination-container">
     <div>
-        <a th:href="@{'/flight?page=1&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">First</a>
-        <a th:if="${currentPage > 1}"
-           th:href="@{'/flight?page=' + ${currentPage - 1} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Previous</a>
+        <button>
+            <a th:href="@{'?page=1&orderBy=' + ${orderByVal} + '&size=' +${flightSize} + '&orderDirection=' + ${orderDirectionVal}}">First</a>
+        </button>
+        <button th:if="${currentPage > 1}">
+            <a th:href="@{'?page=' + ${currentPage - 1} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Previous</a>
+        </button>
 
         <!-- Display pagination links for 5 pages at a time -->
         <span th:each="pageNum : ${#numbers.sequence(currentPage - 2 > 0 ? currentPage - 2 : 1,
                                   currentPage + 2 <= totalPages ? currentPage + 2 : totalPages)}">
-            <a th:href="@{'/flight?page=' + ${pageNum} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}"
-               th:class="${pageNum == currentPage ? 'current-page' : ''}">
-                <span th:text="${pageNum}"></span>
-            </a>
+            <button>
+                <a th:href="@{'?page=' + ${pageNum} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}"
+                   th:class="${pageNum == currentPage ? 'current-page' : ''}">
+                    <span th:text="${pageNum}"></span>
+                </a>
+            </button>
         </span>
 
-        <a th:if="${currentPage < totalPages}"
-           th:href="@{'/flight?page=' + ${currentPage + 1} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Next</a>
-        <a th:href="@{'/flight?page=' + ${totalPages} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Last</a>
+        <button th:if="${currentPage < totalPages}">
+            <a th:href="@{'?page=' + ${currentPage + 1} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Next</a>
+        </button>
+        <button>
+            <a th:href="@{'?page=' + ${totalPages} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Last</a>
+        </button>
     </div>
 </div>
 </body>
