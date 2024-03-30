@@ -28,7 +28,11 @@ public class WebSecurityConfig {
 		"/signup",
 		"/login-page",
 		"/home",
-		"/flight/**"
+		"/flight/**",
+		"/monitoring/grafana",
+		"/monitoring/prometheus",
+		"/monitoring/ngrinder"
+
 	};
 
 	private static final String[] SWAGGER_URL_ARRAY = {
@@ -44,7 +48,6 @@ public class WebSecurityConfig {
 		"/v3/api-docs/**",
 		"/swagger-ui/**"
 	};
-
 
 	private final JwtUtil jwtUtil;
 	private final UserDetailsServiceImpl userDetailsService;
