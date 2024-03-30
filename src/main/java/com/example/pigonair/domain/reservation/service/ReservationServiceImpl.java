@@ -89,7 +89,7 @@ public class ReservationServiceImpl implements ReservationService {
 		List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
 		reservations.stream().forEach(reservation -> {
 			Long id = reservation.getId();
-			String name = reservation.getMember().getName();
+			String name = reservation.getMember().getEmail();
 			Flight flight = reservation.getFlight();
 			LocalDateTime departureDate = flight.getDepartureTime();
 			LocalDateTime departureTime = flight.getDepartureTime();
