@@ -25,7 +25,7 @@ public class FlightController {
 
 	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_SIZE = 10;
-	private static final String DEFAULT_ORDER_BY = "Id";
+	private static final String DEFAULT_ORDER_BY = "departureTime";
 	private static final String DEFAULT_ORDER_DIRECTION = "ASC";
 
 	@GetMapping("/flight")
@@ -37,7 +37,7 @@ public class FlightController {
 		Model model) {
 
 		Page<FlightResponseDto> flightsPage = flightService.getAllFlights(page, size, orderBy, orderDirection);
-		populateModel(model, flightsPage, page, orderBy, orderDirection);
+		populateModel(model, flightsPage, page, size, orderBy, orderDirection);
 		return "flight-result";
 	}
 
@@ -55,16 +55,17 @@ public class FlightController {
 
 		Page<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
 			startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
-		populateModel(model, flightsPage, page, orderBy, orderDirection);
+		populateModel(model, flightsPage, page, size, orderBy, orderDirection);
 		return "flight-result";
 	}
 
-	private void populateModel(Model model, Page<FlightResponseDto> flightsPage, int page, String orderBy,
+	private void populateModel(Model model, Page<FlightResponseDto> flightsPage, int page, int size, String orderBy,
 		String orderDirection) {
 		List<FlightResponseDto> flightsList = flightsPage.getContent();
 		model.addAttribute("flights", flightsList);
 		model.addAttribute("totalPages", flightsPage.getTotalPages());
 		model.addAttribute("currentPage", page);
+		model.addAttribute("flightSize", size);
 		model.addAttribute("orderByVal", orderBy);
 		model.addAttribute("orderDirectionVal", orderDirection);
 	}
