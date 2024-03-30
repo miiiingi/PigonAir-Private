@@ -2,10 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tickets</title>
+    <title>예매 정보</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa; /* 추가: 배경색 */
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            text-align: center; /* 추가: 가운데 정렬 */
+            color: #007bff; /* 추가: 텍스트 색상 */
+        }
+
+        .reservation-info-container {
+            border: 2px solid #007bff; /* 수정: 테두리 색상 */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff; /* 추가: 배경색 */
+        }
+
+        .reservation-info {
+            margin-bottom: 20px;
+        }
+
+        .reservation-info p {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #555; /* 추가: 텍스트 색상 */
+        }
+
+        .reservation-info strong {
+            width: 120px;
+            display: inline-block;
+            color: #007bff; /* 추가: 강조 색상 */
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn-container .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-container .btn-primary:hover {
+            background-color: #0056b3; /* 수정: 호버 시 색상 */
+            border-color: #0056b3; /* 수정: 호버 시 테두리 색상 */
+        }
+    </style>
 </head>
 <body>
-<h1>My Tickets</h1>
+<div class="container" th:if="${responseDto.reservationId != null}">
+    <h1>예매 정보</h1>
+    <div class="reservation-info-container">
+        <div class="reservation-info">
+            <p><strong>예매 번호:</strong> [[${responseDto.reservationId}]]</p>
+            <p><strong>출발일:</strong>[[${responseDto.departureTime}]]</p>
+            <p><strong>출발지:</strong>[[${responseDto.origin}]]</p>
+            <p><strong>도착지:</strong>[[${responseDto.destination}]]</p>
+            <p><strong>탑승자 이름:</strong>[[${responseDto.name}]]</p>
+            <p><strong>결제 여부:</strong>[[${responseDto.isPayment} ? '결제 완료' : '미결제']]</p>
+        </div>
+    </div>
+    <div class="btn-container">
+        <a href="/home" class="btn btn-primary">확인</a>
+        <button id="paymentButton" class="btn btn-primary">결제</button>
+    </div>
+</div>
+<div class="container" th:unless="${responseDto.reservationId != null}">
+    <h1>예매 정보</h1>
+    <p>예약된 티켓이 없습니다.</p>
+    <div class="btn-container">
+        <a href="/home" class="btn btn-primary">확인</a>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 결제 버튼 클릭 시 GET 요청 보내는 스크립트
+    $(document).ready(function () {
+        $('#paymentButton').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/api/reservation',
+                success: function () {
+                    // 예약 내역 페이지로 이동
+                    window.location.href = '/reservation/reservation_history';
+                },
+                error: function (xhr, status, error) {
+                    // 에러 처리
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

@@ -31,6 +31,10 @@ public class Seat {
 		this.isAvailable = isAvailable;
 	}
 
+	public void updateIsAvailable() {
+		this.isAvailable = false;
+	}
+
 	public void seatPick(){
 		if(this.isAvailable)
 			this.isAvailable = false;
