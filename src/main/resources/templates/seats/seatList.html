@@ -58,7 +58,6 @@
         <div th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
              class="seat"
              th:text="${seat.seatId}"
-             th:if="${seat.isAvailable}"
              th:attr="data-seat-id=${seat.seatId}"
              onclick="toggleSeatSelection(this)">
         </div>
@@ -71,7 +70,6 @@
            th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
            class="seat"
            th:text="${seat.seatId}"
-           th:if="${seat.isAvailable}"
            th:attr="data-seat-id=${seat.seatId}"
            onclick="toggleSeatSelection(this)">
       </div>
