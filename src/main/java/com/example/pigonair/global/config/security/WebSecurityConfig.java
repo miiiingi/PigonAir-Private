@@ -28,6 +28,7 @@ public class WebSecurityConfig {
 		"/signup",
 		"/login-page",
 		"/home",
+		"/login",
 		"/flight/**",
 		"/swagger/**",
 		"/monitoring/grafana/**",
