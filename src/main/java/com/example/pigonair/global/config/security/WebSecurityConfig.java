@@ -29,9 +29,10 @@ public class WebSecurityConfig {
 		"/login-page",
 		"/home",
 		"/flight/**",
-		"/monitoring/grafana",
-		"/monitoring/prometheus",
-		"/monitoring/ngrinder"
+		"/swagger/**",
+		"/monitoring/grafana/**",
+		"/monitoring/prometheus/**",
+		"/monitoring/ngrinder/**"
 
 	};
 
