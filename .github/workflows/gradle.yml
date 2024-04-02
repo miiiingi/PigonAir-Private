@@ -51,7 +51,7 @@ jobs:
 
       # Gradle build (Test 제외)
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
 
       - name: Docker build & push to docker repo
         run: |
