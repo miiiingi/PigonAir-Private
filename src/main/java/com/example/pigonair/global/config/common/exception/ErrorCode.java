@@ -19,10 +19,10 @@ public enum ErrorCode {
     NOT_FOUND_SEAT("NOT_FOUND_SEAT", "좌석을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOT_FOUND_MEMBER("NOT_FOUND_MEMBER", "회원을 찾을 수 없습니다", HttpStatus.NOT_FOUND),
     NOT_FOUND_FLIGHT("NOT_FOUND_FLIGHT", "비행기를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
-    ALREADY_RESERVED_SEAT("ALREADY_RESERVED_SEAT", "이미 예약된 좌석입니다", HttpStatus.CONFLICT);
-  	INVALID_SEARCH_CONDITION("INVALID_SEARCH_CONDITION", "불가능한 검색 조건입니다.", HttpStatus.BAD_REQUEST),
-	  INVALID_PATH_VARIABLE("INVALID_PATH_VARIABLE", "출발지 또는 도착지가 잘못되었습니다.", HttpStatus.BAD_REQUEST),
-	  DATABASE_ERROR("DATABASE_ERROR", "데이터베이스 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    ALREADY_RESERVED_SEAT("ALREADY_RESERVED_SEAT", "이미 예약된 좌석입니다", HttpStatus.CONFLICT),
+    INVALID_SEARCH_CONDITION("INVALID_SEARCH_CONDITION", "불가능한 검색 조건입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_PATH_VARIABLE("INVALID_PATH_VARIABLE", "출발지 또는 도착지가 잘못되었습니다.", HttpStatus.BAD_REQUEST),
+    DATABASE_ERROR("DATABASE_ERROR", "데이터베이스 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String key;
     private final String message;
