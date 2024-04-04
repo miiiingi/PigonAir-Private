@@ -1,5 +1,12 @@
 package com.example.pigonair.domain.reservation.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.pigonair.domain.flight.entity.Flight;
 import com.example.pigonair.domain.flight.repository.FlightRepository;
 import com.example.pigonair.domain.member.entity.Member;
@@ -13,27 +20,22 @@ import com.example.pigonair.domain.seat.repository.SeatRepository;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
-    private final ReservationRepository reservationRepository;
-    private final FlightRepository flightRepository;
-    private final MemberRepository memberRepository;
-    private final SeatRepository seatRepository;
+	private final ReservationRepository reservationRepository;
+	private final FlightRepository flightRepository;
+	private final MemberRepository memberRepository;
+	private final SeatRepository seatRepository;
 
-    @Override
-    @Transactional
-    public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
+	@Override
+	@Transactional
+	public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
 
-        Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
+		Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
 
         Seat seat = getSeat(requestDto);      // 좌석 정보 확인 및 가져오기
 
@@ -41,48 +43,47 @@ public class ReservationServiceImpl implements ReservationService {
 
         checkIsAvailableSeat(seat); // 예약 가능한 좌석인지 확인
 
-        Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
-        seat.seatPick();    // 좌석 예매 불가로 변경
-        reservationRepository.save(reservation);
-    }
+		Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
+		seat.seatPick();    // 좌석 예매 불가로 변경
+		reservationRepository.save(reservation);
+	}
+	@Transactional
+	public void updateReservationStatus() {
+		LocalDateTime currentTime = LocalDateTime.now();
+		LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
 
-    @Transactional
-    public void updateReservationStatus() {
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
+		List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
 
-        List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
+		for (Reservation reservation : expiredReservations) {
+			// isPayment 업데이트
+			reservationRepository.delete(reservation);
 
-        for (Reservation reservation : expiredReservations) {
-            // isPayment 업데이트
-            reservationRepository.delete(reservation);
+			// Seat의 isAvailable 업데이트
+			Seat seat = reservation.getSeat();
+			seat.setIsAvailable();
+			seatRepository.save(seat);
+		}
+	}
 
-            // Seat의 isAvailable 업데이트
-            Seat seat = reservation.getSeat();
-            seat.setIsAvailable();
-            seatRepository.save(seat);
-        }
-    }
+	@Override
+	public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
+		// 로그인 정보 확인 및 가져오기
+		Member member = getMember(userDetails);
+		// 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
+		List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
+		// responseDto 만들기
+		List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
 
-    @Override
-    public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
-        // 로그인 정보 확인 및 가져오기
-        Member member = getMember(userDetails);
-        // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
-        List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
-        // responseDto 만들기
-        List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
+		return reservationResponseDtos;
+	}
 
-        return reservationResponseDtos;
-    }
+	// --------------------------private method--------------------------
 
-    // --------------------------private method--------------------------
-
-    private Member getMember(UserDetailsImpl userDetails) {
-        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-        return member;
-    }
+	private Member getMember(UserDetailsImpl userDetails) {
+		Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
+			new NullPointerException());
+		return member;
+	}
 
     private Seat getSeat(ReservationRequestDto requestDto) {
         Seat seat = seatRepository.findById(requestDto.seatId()).orElseThrow(() ->

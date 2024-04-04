@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결제</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+</head>
+<body>
+
+<script>
+    // This script will be executed once the page is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        var IMP = window.IMP;
+        var impKey = "[[${responseDto.impKey}]]";
+        IMP.init(impKey);
+
+        // Function to request payment
+        function requestPay() {
+
+            IMP.request_pay({
+                    pg: 'html5_inicis.INIpayTest',
+                    pay_method: 'card',
+                    merchant_uid: "[[${responseDto.payUuid}]]", // Order number
+                    name: "[[${responseDto.memberName}]]", // Product name
+                    amount: parseInt("[[${responseDto.price}]]"), // Product price
+                    buyer_name: "[[${responseDto.memberName}]]",
+                    buyer_email: "[[${responseDto.memberEmail}]]", // Buyer email
+                    buyer_addr: "[[${responseDto.memberEmail}]]",
+                    buyer_tel: "[[${responseDto.phoneNumber}]]", // Buyer phone number
+                    buyer_postcode: '123-456',
+                },
+                function (rsp) {
+                    if (rsp.success) {
+                        alert('callback!!: ' + JSON.stringify(rsp));
+                        // If payment is successful, send an AJAX request to your server
+                        $.ajax({
+                            url: "/pay",
+                            method: "POST",
+                            contentType: 'application/json', // JSON 형식 명시
+                            data: JSON.stringify({
+                                "paidAmount": "[[${responseDto.price}]]",
+                                "serialNumber": "[[${responseDto.payUuid}]]",
+                                "id": "[[${responseDto.reservationId}]]"
+                            }),
+                            success: function (response) {
+                                alert('결제가 정상 처리 되었습니다!');
+                                window.location.href = "/home";
+                            },
+                            error: function (error) {
+                                alert('결제에 실패했습니다!');
+                                //alert('Payment verification failed: ' + JSON.stringify(error));
+                            }
+                        });
+                    } else {
+                        //alert("success? " + rsp.success + ", Payment failed. Error details: " + JSON.stringify(rsp));
+                        alert('Payment failed!');
+                    }
+                });
+        }
+
+        // Request payment when the page is loaded
+        requestPay(); // event 전달
+    });
+</script>
+
+</body>
+</html>

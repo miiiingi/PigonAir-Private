@@ -1,6 +1,6 @@
 package com.example.pigonair.domain.member.service;
 
-import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,9 +42,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public TicketResponseDto getTicketPage(Member member) {
-		Reservation reservation = reservationRepository.findByMemberId(member.getId()).orElseThrow(
-			() -> new CustomException(RESERVATION_NOT_FOUND)
-		);
+		Optional<Reservation> optionalReservation = reservationRepository.findByMemberId(member.getId());
+		if (optionalReservation.isEmpty()) {
+			// 예약을 찾지 못함 에러
+			return new TicketResponseDto();
+		}
+		Reservation reservation = optionalReservation.get();
 		return new TicketResponseDto(reservation);
 	}
 }

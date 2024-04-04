@@ -6,6 +6,6 @@ public class PaymentRequestDto {
 		Long paidAmount,    //결제 금액
 		String serialNumber    //결제 uuid
 	) {
-
 	}
+
 }
