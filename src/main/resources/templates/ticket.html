@@ -70,8 +70,11 @@
     </div>
     <div class="btn-container">
         <a href="/" class="btn btn-primary">확인</a>
-        <button id="paymentButton" class="btn btn-primary">결제</button>
+        <th:block th:if="${!responseDto.isPayment}">
+            <button id="paymentButton" class="btn btn-primary">결제</button>
+        </th:block>
     </div>
+
 </div>
 <div class="container" th:unless="${responseDto.reservationId != null}">
     <h1>예매 정보</h1>
