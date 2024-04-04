@@ -1,6 +1,8 @@
 package com.example.pigonair.domain.payment.service;
 
+import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
+import com.example.pigonair.domain.payment.dto.PaymentResponseDto.PayResponseDto;
 import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.domain.reservation.entity.Reservation;
 
@@ -9,4 +11,6 @@ public interface PaymentService {
 	TicketResponseDto postPayProcess(PostPayRequestDto requestDto);
 
 	void savePayInfo(String serialNumber, Reservation reservation);
+
+	PayResponseDto payProcess(Long ReservationId, Member member);
 }

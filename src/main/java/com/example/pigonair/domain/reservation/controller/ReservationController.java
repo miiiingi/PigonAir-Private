@@ -2,7 +2,6 @@ package com.example.pigonair.domain.reservation.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,9 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class ReservationController {
 	private final ReservationService reservationService;
 
-	@Value("${iamport.impKey}")
-	private String impKey;
-
 	@PostMapping("/api/reservation") // 예약 진행
 	public ResponseEntity<?> saveReservation(@RequestBody ReservationRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {  // 로그인 기능 구현 완료 시 UserDetail 추가
@@ -45,7 +41,6 @@ public class ReservationController {
 		Model model) {  // 로그인 기능 구현 완료 시 UserDetail 추가
 		List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
 		model.addAttribute("reservations", reservations);
-		model.addAttribute("impKey", impKey);
 		return "/reservation/reservation_history";
 	}
 }
