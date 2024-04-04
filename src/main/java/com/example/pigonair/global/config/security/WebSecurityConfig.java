@@ -28,6 +28,8 @@ public class WebSecurityConfig {
 		"/signup",
 		"/login-page",
 		"/",
+		"/actuator/**",
+		"/connections/**",
 		"/flight/**",
 		"/swagger/**",
 		"/monitoring/grafana/**",
