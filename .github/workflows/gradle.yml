@@ -31,8 +31,11 @@ jobs:
       - name: Create directory for application.properties
         run: mkdir -p ./src/main/resources/
 
-      - name: Generate application.properties
-        run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.properties
+      - name: Generate application.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
+
+      - name: Generate TEST application.yml
+        run: echo "${{ secrets.TEST_APPLICATION_PROPERTIES_CONTENT }}" > ./src/test/resources/application.yml
 
       - name: Gradle Caching
         uses: actions/cache@v3
