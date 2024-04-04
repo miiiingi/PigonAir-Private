@@ -41,7 +41,7 @@ public class FlightController {
 			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
 		} catch (CustomException ex) {
 			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
-			return "home";
+			return "index";
 		}
 		return "flight-result";
 	}
@@ -64,7 +64,7 @@ public class FlightController {
 			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
 		} catch (CustomException ex) {
 			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
-			return "home";
+			return "index";
 		}
 		return "flight-result";
 	}

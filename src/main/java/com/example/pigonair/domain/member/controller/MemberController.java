@@ -40,9 +40,9 @@ public class MemberController {
 		return "login";
 	}
 
-	@GetMapping("/home")
+	@GetMapping("/")
 	public String homePage() {
-		return "home";
+		return "index";
 	}
 
 	@GetMapping("/mypage")
