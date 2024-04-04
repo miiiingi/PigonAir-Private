@@ -28,8 +28,11 @@ jobs:
         with:
           java-version: 17
 
-      - name: Create directory for application.properties
+      - name: Create directory for application.yml
         run: mkdir -p ./src/main/resources/
+
+      - name: Create directory for TEST application.yml
+        run: mkdir -p ./src/test/resources/
 
       - name: Generate application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
