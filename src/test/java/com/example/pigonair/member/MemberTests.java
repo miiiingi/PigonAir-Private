@@ -1,11 +1,10 @@
-package com.example.pigonair;
+package com.example.pigonair.member;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.pigonair.domain.member.dto.MemberRequestDto;
@@ -22,13 +20,12 @@ import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.member.repository.MemberRepository;
 import com.example.pigonair.domain.member.service.MemberServiceImpl;
 import com.example.pigonair.global.config.common.exception.CustomException;
-import com.example.pigonair.global.config.common.exception.ErrorCode;
 
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @Transactional
-class PigonAirApplicationTests {
+class MemberTests {
 	@Autowired
 	private MemberServiceImpl memberService;
 	@Autowired
