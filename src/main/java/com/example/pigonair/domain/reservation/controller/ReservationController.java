@@ -43,6 +43,6 @@ public class ReservationController {
                                   Model model) {  // 로그인 기능 구현 완료 시 UserDetail 추가
         List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
         model.addAttribute("reservations", reservations);
-        return "/reservation/reservation_history";
+        return "reservation/reservation_history";
     }
 }
