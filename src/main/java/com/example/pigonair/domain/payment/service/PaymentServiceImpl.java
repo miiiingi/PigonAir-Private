@@ -2,12 +2,16 @@ package com.example.pigonair.domain.payment.service;
 
 import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
+import com.example.pigonair.domain.payment.dto.PaymentResponseDto.PayResponseDto;
 import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.domain.payment.entity.Payment;
 import com.example.pigonair.domain.payment.repository.PaymentRepository;
@@ -15,6 +19,7 @@ import com.example.pigonair.domain.reservation.entity.Reservation;
 import com.example.pigonair.domain.reservation.repository.ReservationRepository;
 import com.example.pigonair.domain.seat.entity.Seat;
 import com.example.pigonair.global.config.common.exception.CustomException;
+import com.example.pigonair.global.config.common.ulid.Ulid;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,19 +29,31 @@ public class PaymentServiceImpl implements PaymentService {
 
 	private final ReservationRepository reservationRepository;
 	private final PaymentRepository paymentRepository;
+	@Value("${iamport.impKey}")
+	private String impKey;
+
+	@Override
+	@Transactional
+	public PayResponseDto payProcess(Long ReservationId, Member member) {
+		Reservation reservation = reservationRepository.findById(ReservationId).orElseThrow(() ->
+			new CustomException(RESERVATION_NOT_FOUND));
+		String payUlid = getUlid();
+
+		return new PayResponseDto(reservation, member, payUlid, impKey);
+	}
 
 	@Override
 	@Transactional
 	public TicketResponseDto postPayProcess(PostPayRequestDto requestDto) {
 		Optional<Reservation> optionalReservation = reservationRepository.findById(requestDto.id());
+		// 예약을 찾지 못할 경우 null 반환
 		if (optionalReservation.isEmpty()) {
-			// 예약을 찾지 못함 에러
-			throw new CustomException(RESERVATION_NOT_FOUND);
+			return null;
 		}
 		Reservation reservation = optionalReservation.get();
 
 		//결제 금액과 좌석 가격이 같은지 확인
-		if (reservation.getSeat().getPrice() != requestDto.paidAmount()) {
+		if (!Objects.equals(reservation.getSeat().getPrice(), requestDto.paidAmount())) {
 			// 결제 금액 불일치 에러
 			throw new CustomException(PAYMENT_AMOUNT_MISMATCH);
 		}
@@ -69,4 +86,10 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 		seat.updateIsAvailable();
 	}
+
+	private String getUlid() {
+		Ulid ulid = new Ulid();
+		return ulid.nextULID();
+	}
+
 }

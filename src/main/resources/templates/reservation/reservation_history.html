@@ -4,83 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>예약 대기 화면</title>
-    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 
-    <script>
-        var IMP = window.IMP;
-        var impKey = "[[${impKey}]]";
-        IMP.init(impKey);
-
-        function generateUUID() {
-            var crypto = window.crypto || window.msCrypto;
-            if (crypto) {
-                var array = new Uint32Array(4);
-                crypto.getRandomValues(array);
-                var uuid = '';
-                for (var i = 0; i < array.length; i++) {
-                    uuid += (i < 2 || i > 1 && i < 3 ? '' : '-') + array[i].toString(16).slice(-4);
-                }
-                return uuid;
-            } else {
-                // Fallback to Math.random() if crypto API is not available
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                    var r = Math.random() * 16 | 0,
-                        v = c === 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                });
-            }
-        }
-
-        function requestPay(event) {
-            event.preventDefault(); // 기본 폼 제출 방지
-
-            var chargeUid = generateUUID(); // 변경된 부분
-            var chargeName = document.querySelector('[name="reservationId"]').value;
-            var paymentPrice = document.querySelector('[name="price"]').value;
-            var buyerEmail = document.querySelector('[name="memberName"]').value;
-            var buyerPhone = document.querySelector('[name="phoneNumber"]').value;
-            alert(chargeUid);
-            IMP.request_pay({
-                    pg: 'html5_inicis.INIpayTest',
-                    pay_method: 'card',
-                    merchant_uid: chargeUid, // 주문 번호
-                    name: chargeName, // 상품 이름
-                    amount: parseInt(paymentPrice), // 상품 가격
-                    buyer_name: buyerEmail,
-                    buyer_email: buyerEmail, // 구매자 이메일
-                    buyer_addr: buyerEmail,
-                    buyer_tel: buyerPhone, // 구매자 폰번호
-                    buyer_postcode: '123-456',
-                },
-                function (rsp) {
-                    if (rsp.success) {
-                        alert('call back!!: ' + JSON.stringify(rsp));
-                        // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-                        // jQuery로 HTTP 요청
-                        jQuery.ajax({
-                            url: "/pay",
-                            method: "POST",
-                            headers: {"Content-Type": "application/json"},
-                            data: JSON.stringify({
-                                "paidAmount": paymentPrice,      // 결제 고유번호
-                                "serialNumber": rsp.merchant_uid,  // 주문번호
-                                "id": chargeName
-                            })
-                        }).done(function (response) {
-                            console.log(response);
-                            // 가맹점 서버 결제 API 성공시 로직
-                            alert('Please, Check your payment result page!!' + rsp);
-                            alert('결제 완료!');
-                            window.location.href = "/home";
-                        })
-                    } else {
-                        alert("success? " + rsp.success + ", 결제에 실패하였습니다. 에러 내용: " + JSON.stringify(rsp));
-                        alert('결제 실패!');
-                    }
-                });
-        }
-
-    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -165,12 +89,12 @@
             <td th:text="${reservation.destination}">목적지</td>
             <td th:text="${reservation.seatNumber}">좌석번호</td>
             <td>
-                <form onsubmit="event.preventDefault();"> <!-- 기본 폼 제출 방지 -->
+                <!-- 타임리프를 이용해 동적 URL 생성 -->
+                <form th:action="@{|/pay/${reservation.id}|}" method="get">
+                    <!-- 예약 ID를 hidden input으로 전달 -->
                     <input type="hidden" name="reservationId" th:value="${reservation.id}"/>
-                    <input type="hidden" name="memberName" th:value="${reservation.memberName}"/>
-                    <input type="hidden" name="price" th:value="${reservation.price}"/>
-                    <input type="hidden" name="phoneNumber" th:value="${reservation.phoneNumber}"/>
-                    <button class="payment-button" onclick="requestPay(event)">결제</button>
+                    <!-- 결제하기 버튼 -->
+                    <button type="submit" class="payment-button">결제하기</button>
                 </form>
             </td>
         </tr>

@@ -24,6 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
+
     private final ReservationRepository reservationRepository;
     private final FlightRepository flightRepository;
     private final MemberRepository memberRepository;
