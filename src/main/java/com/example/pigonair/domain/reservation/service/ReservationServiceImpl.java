@@ -47,6 +47,23 @@ public class ReservationServiceImpl implements ReservationService {
 		seat.seatPick();    // 좌석 예매 불가로 변경
 		reservationRepository.save(reservation);
 	}
+	@Transactional
+	public void updateReservationStatus() {
+		LocalDateTime currentTime = LocalDateTime.now();
+		LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
+
+		List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
+
+		for (Reservation reservation : expiredReservations) {
+			// isPayment 업데이트
+			reservationRepository.delete(reservation);
+
+			// Seat의 isAvailable 업데이트
+			Seat seat = reservation.getSeat();
+			seat.setIsAvailable();
+			seatRepository.save(seat);
+		}
+	}
 
 	@Override
 	public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
