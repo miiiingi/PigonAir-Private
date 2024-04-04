@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.pigonair.domain.flight.dto.FlightResponseDto;
 import com.example.pigonair.domain.flight.service.FlightService;
+import com.example.pigonair.global.config.common.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +36,13 @@ public class FlightController {
 		@RequestParam(defaultValue = DEFAULT_ORDER_BY) String orderBy,
 		@RequestParam(defaultValue = DEFAULT_ORDER_DIRECTION) String orderDirection,
 		Model model) {
-
-		Page<FlightResponseDto> flightsPage = flightService.getAllFlights(page, size, orderBy, orderDirection);
-		populateModel(model, flightsPage, page, size, orderBy, orderDirection);
+		try {
+			Page<FlightResponseDto> flightsPage = flightService.getAllFlights(page, size, orderBy, orderDirection);
+			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
+		} catch (CustomException ex) {
+			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
+			return "home";
+		}
 		return "flight-result";
 	}
 
@@ -53,9 +58,14 @@ public class FlightController {
 		@RequestParam(defaultValue = DEFAULT_ORDER_DIRECTION) String orderDirection,
 		Model model) {
 
-		Page<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
-			startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
-		populateModel(model, flightsPage, page, size, orderBy, orderDirection);
+		try {
+			Page<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
+				startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
+			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
+		} catch (CustomException ex) {
+			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
+			return "home";
+		}
 		return "flight-result";
 	}
 
