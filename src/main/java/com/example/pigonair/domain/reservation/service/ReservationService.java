@@ -10,4 +10,6 @@ public interface ReservationService {
     void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails);
 
     List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails);
+
+    void updateReservationStatus();
 }
