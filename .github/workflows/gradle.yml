@@ -28,11 +28,17 @@ jobs:
         with:
           java-version: 17
 
-      - name: Create directory for application.properties
+      - name: Create directory for application.yml
         run: mkdir -p ./src/main/resources/
 
-      - name: Generate application.properties
-        run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.properties
+      - name: Create directory for TEST application.yml
+        run: mkdir -p ./src/test/resources/
+
+      - name: Generate application.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
+
+      - name: Generate TEST application.yml
+        run: echo "${{ secrets.TEST_APPLICATION_PROPERTIES_CONTENT }}" > ./src/test/resources/application.yml
 
       - name: Gradle Caching
         uses: actions/cache@v3
@@ -51,7 +57,7 @@ jobs:
 
       # Gradle build (Test 제외)
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
 
       - name: Docker build & push to docker repo
         run: |
