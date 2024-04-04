@@ -29,27 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	private final MemberServiceImpl memberServiceImpl;
 
-	@GetMapping("/signup")
-	public String signupPage(Model model) {
-		model.addAttribute("ErrorMessage", null);
-		return "signup";
-	}
-
-	@GetMapping("/login-page")
-	public String loginPage() {
-		return "login";
-	}
-
-	@GetMapping("/")
-	public String homePage() {
-		return "index";
-	}
-
-	@GetMapping("/mypage")
-	public String myPage(@AuthenticationPrincipal UserDetails userDetails) {
-		return "mypage";
-	}
-
 	@GetMapping("/ticket")
 	public String myTicket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
 		TicketResponseDto responseDto = memberServiceImpl.getTicketPage(userDetails.getUser());
