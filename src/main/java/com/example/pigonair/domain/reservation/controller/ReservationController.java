@@ -1,11 +1,15 @@
 package com.example.pigonair.domain.reservation.controller;
 
+
 import com.example.pigonair.domain.reservation.dto.ReservationRequestDto;
 import com.example.pigonair.domain.reservation.dto.ReservationResponseDto;
 import com.example.pigonair.domain.reservation.service.ReservationService;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,7 +23,9 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ReservationController {
+
     private final ReservationService reservationService;
+
 
     @PostMapping("/api/reservation") // 예약 진행
     public ResponseEntity<?> saveReservation(@RequestBody ReservationRequestDto requestDto,
@@ -32,11 +38,11 @@ public class ReservationController {
         }
     }
 
-	@GetMapping("/api/reservation") // 예약 진행
-	public String getReservations(@AuthenticationPrincipal UserDetailsImpl userDetails,
-		Model model) {  // 로그인 기능 구현 완료 시 UserDetail 추가
-		List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
-		model.addAttribute("reservations", reservations);
-		return "/reservation/reservation_history";
-	}
+    @GetMapping("/api/reservation") // 예약 진행
+    public String getReservations(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  Model model) {  // 로그인 기능 구현 완료 시 UserDetail 추가
+        List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
+        model.addAttribute("reservations", reservations);
+        return "/reservation/reservation_history";
+    }
 }

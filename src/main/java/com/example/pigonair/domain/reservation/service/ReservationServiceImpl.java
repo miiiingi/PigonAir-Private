@@ -26,10 +26,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
-	private final ReservationRepository reservationRepository;
-	private final FlightRepository flightRepository;
-	private final MemberRepository memberRepository;
-	private final SeatRepository seatRepository;
+
+    private final ReservationRepository reservationRepository;
+    private final FlightRepository flightRepository;
+    private final MemberRepository memberRepository;
+    private final SeatRepository seatRepository;
 
 	@Override
 	@Transactional
@@ -43,47 +44,48 @@ public class ReservationServiceImpl implements ReservationService {
 
         checkIsAvailableSeat(seat); // 예약 가능한 좌석인지 확인
 
-		Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
-		seat.seatPick();    // 좌석 예매 불가로 변경
-		reservationRepository.save(reservation);
-	}
-	@Transactional
-	public void updateReservationStatus() {
-		LocalDateTime currentTime = LocalDateTime.now();
-		LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
+        Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
+        seat.seatPick();    // 좌석 예매 불가로 변경
+        reservationRepository.save(reservation);
+    }
 
-		List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
+    @Transactional
+    public void updateReservationStatus() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
 
-		for (Reservation reservation : expiredReservations) {
-			// isPayment 업데이트
-			reservationRepository.delete(reservation);
+        List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
 
-			// Seat의 isAvailable 업데이트
-			Seat seat = reservation.getSeat();
-			seat.setIsAvailable();
-			seatRepository.save(seat);
-		}
-	}
+        for (Reservation reservation : expiredReservations) {
+            // isPayment 업데이트
+            reservationRepository.delete(reservation);
 
-	@Override
-	public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
-		// 로그인 정보 확인 및 가져오기
-		Member member = getMember(userDetails);
-		// 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
-		List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
-		// responseDto 만들기
-		List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
+            // Seat의 isAvailable 업데이트
+            Seat seat = reservation.getSeat();
+            seat.setIsAvailable();
+            seatRepository.save(seat);
+        }
+    }
 
-		return reservationResponseDtos;
-	}
+    @Override
+    public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
+        // 로그인 정보 확인 및 가져오기
+        Member member = getMember(userDetails);
+        // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
+        List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
+        // responseDto 만들기
+        List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
 
-	// --------------------------private method--------------------------
+        return reservationResponseDtos;
+    }
 
-	private Member getMember(UserDetailsImpl userDetails) {
-		Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
-			new NullPointerException());
-		return member;
-	}
+    // --------------------------private method--------------------------
+
+    private Member getMember(UserDetailsImpl userDetails) {
+        Member member = memberRepository.findById(userDetails.getUser().getId()).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+        return member;
+    }
 
     private Seat getSeat(ReservationRequestDto requestDto) {
         Seat seat = seatRepository.findById(requestDto.seatId()).orElseThrow(() ->
