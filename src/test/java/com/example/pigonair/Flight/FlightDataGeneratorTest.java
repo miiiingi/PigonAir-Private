@@ -1,6 +1,6 @@
 package com.example.pigonair.Flight;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
