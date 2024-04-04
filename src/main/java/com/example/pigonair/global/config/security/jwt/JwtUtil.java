@@ -126,6 +126,7 @@ public class JwtUtil {
 				}
 			}
 		}
+		logger.error("쿠키가 비어있습니다.");
 		return null;
 	}
 
