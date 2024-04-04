@@ -25,9 +25,7 @@ public class SeatController {
 	@GetMapping("/{flightId}")
 	public String getSeatingChart(@PathVariable Long flightId, Model model,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		System.out.println("flightId = " + flightId);
-		List<SeatResponseDto> seatsDto = seatService.getSeatingChart(flightId);
-		System.out.println(seatsDto);
+		SeatService.Result seatsDto = seatService.getSeatingChart(flightId);
 		model.addAttribute("seats", seatsDto);
 		return "seats/seatList";
 	}
