@@ -12,4 +12,6 @@ public interface ReservationService {
     List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails);
 
     void updateReservationStatus();
+
+    void cancelReservation(Long reservation_id, UserDetailsImpl userDetails);
 }

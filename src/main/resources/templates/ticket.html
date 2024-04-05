@@ -71,6 +71,7 @@
     <div class="btn-container">
         <a href="/" class="btn btn-primary">확인</a>
         <button id="paymentButton" class="btn btn-primary">결제</button>
+        <button id="cancelButton" class="btn btn-primary">취소</button>
     </div>
 </div>
 <div class="container" th:unless="${responseDto.reservationId != null}">
@@ -86,6 +87,23 @@
         $('#paymentButton').click(function () {
             var reservationId = "[[${responseDto.reservationId}]]";
             window.location.href = "/pay/" + reservationId;
+        });
+
+        $('#cancelButton').click(function () {
+            var reservationId = "[[${responseDto.reservationId}]]";
+            $.ajax({
+                url: "/api/reservation/" + reservationId,
+                type: "DELETE",
+                success: function() {
+                    alert("예약이 취소되었습니다.");
+                    location.reload();
+                },
+                error: function() {
+                    alert("예약 취소 중 문제가 발생했습니다.");
+                    location.reload();
+                }
+
+            });
         });
     });
 </script>

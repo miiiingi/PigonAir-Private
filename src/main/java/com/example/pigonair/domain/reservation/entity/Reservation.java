@@ -50,4 +50,5 @@ public class Reservation {
 	public void updateIsPayment() {
 		this.isPayment = true;
 	}
+
 }
