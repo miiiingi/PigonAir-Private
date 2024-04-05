@@ -135,21 +135,26 @@
           } else if (response.status === 404) {
             // 404 Not Found 에러 처리
             alert('잘못된 요청입니다');
+            location.reload();
           } else if (response.status === 409) {
             // 400 Bad Request 에러 처리
             alert('이미 선택된 좌석입니다');
+            location.reload();
           } else {
             // 기타 오류 처리
             alert('예약을 처리하는 동안 문제가 발생했습니다.');
+            location.reload();
           }
         }).catch(error => {
           console.error('Error:', error);
           alert('예약을 처리하는 동안 문제가 발생했습니다.');
+          location.reload();
         });
       }
     } else {
       // 선택된 좌석이 없으면 메시지 표시
       alert('좌석을 선택해주세요.');
+      location.reload();
     }
   }
 </script>
