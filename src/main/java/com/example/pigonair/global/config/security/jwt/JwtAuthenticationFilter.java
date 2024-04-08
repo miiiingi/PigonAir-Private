@@ -36,8 +36,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		try {
 			MemberRequestDto.LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
 				MemberRequestDto.LoginRequestDto.class);
-			System.out.println("attempt requestDto.email() = " + requestDto.email());
-			System.out.println("attempt requestDto.password() = " + requestDto.password());
 
 			return getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(
@@ -58,7 +56,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		log.info("로그인 성공 및 JWT 생성");
 		String email = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
 		String token = jwtUtil.createToken(email);
-		System.out.println("success requestDto.email() = " + email);
 
 		jwtUtil.addJwtToCookie(token, response);
 		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
