@@ -68,6 +68,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
+    public void cancelReservation(Long reservation_id, UserDetailsImpl userDetails) {
+        Reservation reservation = getReservation(reservation_id);
+        reservation.getSeat().setIsAvailable();
+        reservationRepository.delete(reservation);
+    }
+
+
+    @Override
     public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
         // 로그인 정보 확인 및 가져오기
         Member member = getMember(userDetails);
@@ -134,5 +143,12 @@ public class ReservationServiceImpl implements ReservationService {
 
         });
         return reservationResponseDtos;
+    }
+
+
+    private Reservation getReservation(Long reservation_id) {
+        Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(()->
+            new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+        return reservation;
     }
 }
