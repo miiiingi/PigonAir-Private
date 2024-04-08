@@ -28,7 +28,6 @@ public class WebSecurityConfig {
 		"/signup",
 		"/login-page",
 		"/",
-		"/checkLogin",
 		"/apm/**",
 		"/actuator/**",
 		"/flight/**",
