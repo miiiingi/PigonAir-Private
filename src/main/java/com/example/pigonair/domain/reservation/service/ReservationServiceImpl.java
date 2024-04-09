@@ -71,8 +71,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public void cancelReservation(Long reservation_id, UserDetailsImpl userDetails) {
         Reservation reservation = getReservation(reservation_id);
-        reservation.getSeat().setIsAvailable();
-        reservationRepository.delete(reservation);
+        Member member = getMember(userDetails);
+        if(member.equals(reservation.getMember())){
+            reservation.getSeat().setIsAvailable();
+            reservationRepository.delete(reservation);
+        }
+        else
+            throw new CustomException(ErrorCode.FORBIDDEN);
     }
 
 
@@ -80,6 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
         // 로그인 정보 확인 및 가져오기
         Member member = getMember(userDetails);
+        System.out.println(member.getEmail());
         // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
         List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
         // responseDto 만들기
