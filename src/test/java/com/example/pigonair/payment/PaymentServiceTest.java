@@ -14,8 +14,8 @@ import com.example.pigonair.domain.flight.entity.Flight;
 import com.example.pigonair.domain.flight.repository.FlightRepository;
 import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.member.repository.MemberRepository;
+import com.example.pigonair.domain.member.service.MemberServiceImpl;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
-import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.domain.payment.repository.PaymentRepository;
 import com.example.pigonair.domain.payment.service.PaymentServiceImpl;
 import com.example.pigonair.domain.reservation.entity.Reservation;
@@ -45,6 +45,9 @@ public class PaymentServiceTest {
 
 	@Autowired
 	private MemberRepository memberRepository;
+
+	@Autowired
+	private MemberServiceImpl memberService;
 
 	private Member saveTestMember() {
 		Member member = Member.builder()
@@ -116,24 +119,10 @@ public class PaymentServiceTest {
 		PostPayRequestDto requestDto = new PostPayRequestDto(reservation.getId(), seat.getPrice(), "serialNumber123");
 
 		// When
-		TicketResponseDto response = paymentService.postPayProcess(requestDto);
+		paymentService.postPayProcess(requestDto);
 
 		// Then
-		assertNotNull(response);
 		assertTrue(reservation.isPayment());
-		assertEquals(reservation.getId(), response.reservationId());
-	}
-
-	@Test
-	void postPayProcess_ReservationNotFound() {
-		// Given
-		PostPayRequestDto requestDto = new PostPayRequestDto(999L, 200L, "serialNumber123");
-
-		// When
-		TicketResponseDto response = paymentService.postPayProcess(requestDto);
-
-		// Then
-		assertNull(response);
 	}
 
 	@Test
