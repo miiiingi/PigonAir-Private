@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.pigonair.global.config.security.jwt.JwtAuthenticationFilter;
 import com.example.pigonair.global.config.security.jwt.JwtAuthorizationFilter;
@@ -28,6 +29,8 @@ public class WebSecurityConfig {
 		"/signup",
 		"/login-page",
 		"/",
+		"/apm/**",
+		"/actuator/**",
 		"/flight/**",
 		"/swagger/**",
 		"/monitoring/grafana/**",
@@ -104,6 +107,14 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(AbstractHttpConfigurer::disable);
+		http.cors(cors -> cors.configurationSource(request -> {
+			CorsConfiguration config = new CorsConfiguration();
+			config.setAllowCredentials(true); // 내부 요청에 대한 응답으로 쿠키를 포함시킬지 여부
+			config.addAllowedOrigin("https://pigonair.shop"); // 모든 도메인에서의 요청을 허용
+			config.addAllowedHeader("*"); // 모든 헤더에 대한 요청을 허용
+			config.addAllowedMethod("*"); // 모든 HTTP 메소드 요청을 허용
+			return config;
+		}));
 
 		http.sessionManagement((sessionManagement) ->
 			sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
