@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
 import com.example.pigonair.domain.payment.dto.PaymentResponseDto.PayResponseDto;
-import com.example.pigonair.domain.payment.dto.PaymentResponseDto.TicketResponseDto;
 import com.example.pigonair.domain.payment.entity.Payment;
 import com.example.pigonair.domain.payment.repository.PaymentRepository;
 import com.example.pigonair.domain.reservation.entity.Reservation;
@@ -44,11 +43,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	@Transactional
-	public TicketResponseDto postPayProcess(PostPayRequestDto requestDto) {
+	public void postPayProcess(PostPayRequestDto requestDto) {
 		Optional<Reservation> optionalReservation = reservationRepository.findById(requestDto.id());
 		// 예약을 찾지 못할 경우 null 반환
 		if (optionalReservation.isEmpty()) {
-			return null;
+			throw new CustomException(RESERVATION_NOT_FOUND);
 		}
 		Reservation reservation = optionalReservation.get();
 
@@ -64,8 +63,6 @@ public class PaymentServiceImpl implements PaymentService {
 		savePayInfo(requestDto.serialNumber(), reservation);
 		//좌석 이용불가 변경
 		//updateSeatUnAvailable(reservation);
-
-		return new TicketResponseDto(reservation);
 	}
 
 	@Override

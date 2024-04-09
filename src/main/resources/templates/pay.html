@@ -32,7 +32,7 @@
                 },
                 function (rsp) {
                     if (rsp.success) {
-                        alert('callback!!: ' + JSON.stringify(rsp));
+                        //alert('callback!!: ' + JSON.stringify(rsp));
                         // If payment is successful, send an AJAX request to your server
                         $.ajax({
                             url: "/pay",
@@ -49,12 +49,14 @@
                             },
                             error: function (error) {
                                 alert('결제에 실패했습니다!');
+                                window.location.href = "/ticket";
                                 //alert('Payment verification failed: ' + JSON.stringify(error));
                             }
                         });
                     } else {
                         //alert("success? " + rsp.success + ", Payment failed. Error details: " + JSON.stringify(rsp));
-                        alert('Payment failed!');
+                        alert('결제에 실패했습니다!');
+                        window.location.href = "/ticket";
                     }
                 });
         }
