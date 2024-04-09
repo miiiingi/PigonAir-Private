@@ -35,11 +35,11 @@ jobs:
         run: mkdir -p ./src/test/resources/
 
       - name: Generate application.yml for release
-        if: github.ref == 'refs/heads/release'
+        if: github.base_ref == 'release'
         run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
 
       - name: Generate application.yml for dev
-        if: github.ref == 'refs/heads/dev'
+        if: github.base_ref == 'dev'
         run: echo "${{ secrets.DEV_APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
 
       - name: Generate TEST application.yml
