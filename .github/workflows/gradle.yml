@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "dev"]
+    branches: [ "dev", "release" ]
   pull_request:
-    branches: [ "dev"]
+    branches: [ "dev", "release" ]
 # 사용할 인프라의 이름을 변수 형태로 저장 가능
 jobs:
 
@@ -65,7 +65,8 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0 .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
 
-  deploy:
+  deploy-release:
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
     # needs를 통해 build job이 수행 성공시에 작업되도록 설정
     needs: build
     runs-on: ubuntu-latest
@@ -82,6 +83,34 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PEM }}
+          port: ${{ secrets.EC2_PORT }}
+          timeout: 60s
+          script: | #Docker Image명 기입, port 기입
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
+            cd ~
+            sudo docker-compose up -d
+            sudo docker image prune -f
+  deploy-dev:
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev'
+    # needs를 통해 build job이 수행 성공시에 작업되도록 설정
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # 권한 부여
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: AWS EC2 Connection
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST_DEV }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_PEM }}
           port: ${{ secrets.EC2_PORT }}
