@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
-
+        
       - name: Generate TEST application.yml
         run: echo "${{ secrets.TEST_APPLICATION_PROPERTIES_CONTENT }}" > ./src/test/resources/application.yml
 
