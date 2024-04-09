@@ -34,14 +34,9 @@ jobs:
       - name: Create directory for TEST application.yml
         run: mkdir -p ./src/test/resources/
 
-      - name: Generate application.yml for release
-        if: github.base_ref == 'release'
+      - name: Generate application.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
-
-      - name: Generate application.yml for dev
-        if: github.base_ref == 'dev'
-        run: echo "${{ secrets.DEV_APPLICATION_PROPERTIES_CONTENT }}" > ./src/main/resources/application.yml
-
+        
       - name: Generate TEST application.yml
         run: echo "${{ secrets.TEST_APPLICATION_PROPERTIES_CONTENT }}" > ./src/test/resources/application.yml
 
