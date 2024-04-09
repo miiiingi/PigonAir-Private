@@ -71,8 +71,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public void cancelReservation(Long reservation_id, UserDetailsImpl userDetails) {
         Reservation reservation = getReservation(reservation_id);
-        reservation.getSeat().setIsAvailable();
-        reservationRepository.delete(reservation);
+        Member member = getMember(userDetails);
+        if(member.equals(reservation.getMember())){
+            reservation.getSeat().setIsAvailable();
+            reservationRepository.delete(reservation);
+        }
+        else
+            throw new CustomException(ErrorCode.FORBIDDEN);
     }
 
 

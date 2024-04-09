@@ -29,7 +29,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
 
-    @PostMapping("/api/reservation") // 예약 진행
+    @PostMapping("/reservation") // 예약 진행
     public ResponseEntity<?> saveReservation(@RequestBody ReservationRequestDto requestDto,
                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {  // 로그인 기능 구현 완료 시 UserDetail 추가
         try {
@@ -40,7 +40,7 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/api/reservation") // 예약 진행
+    @GetMapping("/reservation") // 예약 진행
     public String getReservations(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                   Model model) {  // 로그인 기능 구현 완료 시 UserDetail 추가
         List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
@@ -48,7 +48,7 @@ public class ReservationController {
         return "reservation/reservation_history";
     }
 
-    @DeleteMapping("/api/reservation/{reservation_id}") // 예약 취소
+    @DeleteMapping("/reservation/{reservation_id}") // 예약 취소
     public ResponseEntity<?> cancelReservation(@PathVariable Long reservation_id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             reservationService.cancelReservation(reservation_id,userDetails);
