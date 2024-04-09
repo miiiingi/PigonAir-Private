@@ -113,7 +113,7 @@
 
     function cancelReservation(reservationId) {
         // 취소하기 버튼 클릭 시 호출되는 함수
-        fetch('/app-api/reservation/' + reservationId, {
+        fetch('/reservation/' + reservationId, {
             method: 'DELETE'
         })
             .then(response => {

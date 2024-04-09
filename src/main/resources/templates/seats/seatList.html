@@ -122,7 +122,7 @@
           seatId: selectedSeatNumber,
           flightId: selectedFlight
         };
-        fetch('/app-api/reservation', {
+        fetch('/reservation', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -131,7 +131,7 @@
         }).then(response => {
           if (response.ok) {
             // 서버에서 응답을 받은 후 처리
-            window.location.href = '/app-api/reservation';
+            window.location.href = '/reservation';
           } else if (response.status === 404) {
             // 404 Not Found 에러 처리
             alert('잘못된 요청입니다');
