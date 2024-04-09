@@ -92,7 +92,7 @@
         $('#cancelButton').click(function () {
             var reservationId = "[[${responseDto.reservationId}]]";
             $.ajax({
-                url: "/api/reservation/" + reservationId,
+                url: "/app-api/reservation/" + reservationId,
                 type: "DELETE",
                 success: function() {
                     alert("예약이 취소되었습니다.");

@@ -16,7 +16,7 @@ import com.example.pigonair.global.config.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/api/flight")
+@RequestMapping("/app-api/flight")
 @RequiredArgsConstructor
 public class SeatController {
 
