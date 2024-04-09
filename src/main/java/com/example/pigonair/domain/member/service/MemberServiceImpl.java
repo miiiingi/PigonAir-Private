@@ -1,6 +1,6 @@
 package com.example.pigonair.domain.member.service;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,13 +41,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public TicketResponseDto getTicketPage(Member member) {
-		Optional<Reservation> optionalReservation = reservationRepository.findByMemberId(member.getId());
-		if (optionalReservation.isEmpty()) {
-			// 예약을 찾지 못함 에러
-			return new TicketResponseDto();
-		}
-		Reservation reservation = optionalReservation.get();
-		return new TicketResponseDto(reservation);
+	public List<TicketResponseDto> getTicketPage(Member member) {
+		List<Reservation> reservations = reservationRepository.findAllByMemberId(member.getId());
+		return reservations.stream()
+			.map(TicketResponseDto::new)
+			.toList();
 	}
 }

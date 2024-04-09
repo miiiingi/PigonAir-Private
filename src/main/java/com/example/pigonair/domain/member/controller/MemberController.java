@@ -1,5 +1,7 @@
 package com.example.pigonair.domain.member.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +32,7 @@ public class MemberController {
 
 	@GetMapping("/ticket")
 	public String myTicket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-		TicketResponseDto responseDto = memberServiceImpl.getTicketPage(userDetails.getUser());
+		List<TicketResponseDto> responseDto = memberServiceImpl.getTicketPage(userDetails.getUser());
 		model.addAttribute("responseDto", responseDto);
 		return "ticket";
 	}

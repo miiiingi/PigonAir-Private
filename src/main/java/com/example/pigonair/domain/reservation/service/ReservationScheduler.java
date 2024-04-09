@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReservationScheduler {
 
-    @Autowired
-    private ReservationService reservationService;
+	@Autowired
+	private ReservationService reservationService;
 
-    @Scheduled(cron = "0 * * * * *") // 매 분마다 실행
-    public void updateReservationStatus() {
-        reservationService.updateReservationStatus();
-    }
+	@Scheduled(cron = "0 */10 * * * *") // 10분마다 실행
+	public void updateReservationStatus() {
+		reservationService.updateReservationStatus();
+	}
 }

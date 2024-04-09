@@ -8,10 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
-import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
 		this.jwtUtil = jwtUtil;
-		setFilterProcessesUrl("/login");
+		setFilterProcessesUrl("/loginProcess");
 	}
 
 	@Override
@@ -56,6 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		log.info("로그인 성공 및 JWT 생성");
 		String email = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
 		String token = jwtUtil.createToken(email);
+
 		jwtUtil.addJwtToCookie(token, response);
 		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 

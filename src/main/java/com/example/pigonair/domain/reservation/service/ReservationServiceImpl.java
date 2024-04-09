@@ -85,7 +85,6 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
         // 로그인 정보 확인 및 가져오기
         Member member = getMember(userDetails);
-        System.out.println(member.getEmail());
         // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
         List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
         // responseDto 만들기
