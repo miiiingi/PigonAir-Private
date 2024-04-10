@@ -1,5 +1,7 @@
 package com.example.pigonair.global.config.security;
 
+import java.util.Arrays;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -110,7 +112,7 @@ public class WebSecurityConfig {
 		http.cors(cors -> cors.configurationSource(request -> {
 			CorsConfiguration config = new CorsConfiguration();
 			config.setAllowCredentials(true); // 내부 요청에 대한 응답으로 쿠키를 포함시킬지 여부
-			config.addAllowedOrigin("https://pigonair.shop"); // 모든 도메인에서의 요청을 허용
+			config.setAllowedOrigins(Arrays.asList("https://pigonair.shop", "https://pigonair-dev.shop"));
 			config.addAllowedHeader("*"); // 모든 헤더에 대한 요청을 허용
 			config.addAllowedMethod("*"); // 모든 HTTP 메소드 요청을 허용
 			return config;
