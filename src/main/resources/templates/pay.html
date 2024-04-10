@@ -48,14 +48,14 @@
                                 window.location.href = "/";
                             },
                             error: function (error) {
-                                alert('결제에 실패했습니다!');
+                                alert('결제에 실패했습니다!    1');
                                 window.location.href = "/ticket";
-                                //alert('Payment verification failed: ' + JSON.stringify(error));
+                                alert('Payment verification failed: ' + JSON.stringify(error));
                             }
                         });
                     } else {
-                        //alert("success? " + rsp.success + ", Payment failed. Error details: " + JSON.stringify(rsp));
-                        alert('결제에 실패했습니다!');
+                        alert("success? " + rsp.success + ", Payment failed. Error details: " + JSON.stringify(rsp));
+                        alert('결제에 실패했습니다!    2');
                         window.location.href = "/ticket";
                     }
                 });
