@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public void updateReservationStatus() {
         LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(1);
+        LocalDateTime fifteenMinutesAgo = currentTime.minusMinutes(15);
 
         List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
 
