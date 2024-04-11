@@ -76,7 +76,7 @@ jobs:
 
   deploy-release:
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
-    needs: build-and-push
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
@@ -102,7 +102,7 @@ jobs:
 
   deploy-dev:
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev'
-    needs: build-and-push
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
