@@ -59,11 +59,21 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
+      - name: Set Docker Image Tag
+        id: set_tag
+        run: |
+          if [[ "${{ github.event.pull_request.base.ref }}" == "dev" ]]; then
+            echo "::set-output name=tag::dev"
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "release" ]]; then
+            echo "::set-output name=tag::release"
+          fi
+
       - name: Docker build & push to docker repo
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }}
+
 
   deploy-release:
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
