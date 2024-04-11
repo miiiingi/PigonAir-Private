@@ -95,7 +95,7 @@ jobs:
           timeout: 60s
           script: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ needs.build-and-push.outputs.image_tag }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ needs.build.outputs.image_tag }}
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f
@@ -121,7 +121,7 @@ jobs:
           timeout: 60s
           script: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ needs.build-and-push.outputs.image_tag }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ needs.build.outputs.image_tag }}
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f
