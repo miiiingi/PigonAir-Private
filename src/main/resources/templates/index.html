@@ -122,6 +122,7 @@
 
 <div class="button-group">
     <button onclick="redirectToPage('/')" class="btn btn-primary">Home</button>
+    <button onclick="moveToPage('/signup')" class="btn btn-primary">Signup</button>
     <button onclick="redirectToPage('/login-page')" class="btn btn-primary">Login</button>
     <button onclick="redirectToPage('/mypage')" class="btn btn-primary">My Page</button>
     <button onclick="redirectToPage('/ticket')" class="btn btn-primary">My Ticket</button>
@@ -212,6 +213,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+    function moveToPage(page) {
+        const host = 'http://' + window.location.host;
+        window.location.href = host + page;
     }
 </script>
 
