@@ -30,7 +30,7 @@ public class PageController {
 		return "mypage";
 	}
 
-	@GetMapping("favicon.ico")
+	@GetMapping("/favicon.ico")
 	@ResponseBody
 	public void returnNoFavicon() {
 	}
