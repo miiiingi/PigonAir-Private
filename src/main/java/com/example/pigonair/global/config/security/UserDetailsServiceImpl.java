@@ -1,5 +1,6 @@
 package com.example.pigonair.global.config.security;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     @Override
+    @Cacheable(value = "memberCacheStore", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
