@@ -54,7 +54,7 @@
 <div id="seatLayout">
   <div class="seat-container">
     <div class="grid-layout">
-      <div th:each="seat, iterStat : ${seats.getData().subList(0, 40)}">
+      <div th:each="seat, iterStat : ${seats.subList(0, 40)}">
         <div th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
              th:text="${seat.seatId}"
              th:attr="data-seat-id=${seat.seatId}"
@@ -65,7 +65,7 @@
   </div>
   <div class="seat-container">
     <div class="grid-layout">
-      <div th:each="seat, iterStat : ${seats.getData().subList(40, 80)}"
+      <div th:each="seat, iterStat : ${seats.subList(40, 80)}"
            th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
            th:text="${seat.seatId}"
            th:attr="data-seat-id=${seat.seatId}"

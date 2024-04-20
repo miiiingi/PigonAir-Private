@@ -23,7 +23,7 @@ public class SeatService {
 	private final SeatRepository seatRepository;
 	private final FlightRepository flightRepository;
 
-	public Result getSeatingChart(Long flightId) {
+	public List<SeatResponseDto> getSeatingChart(Long flightId) {
 		if(!validateFlight(flightId)){
 			throw new CustomException(ErrorCode.NOT_EXITS_FLIGHT);
 		}
@@ -32,7 +32,7 @@ public class SeatService {
 		for (Seat seat : seats) {
 			seatResponseDtos.add(new SeatResponseDto(seat));
 		}
-		return new Result(seatResponseDtos);
+		return seatResponseDtos;
 
 	}
 	public boolean validateFlight(Long flightId){
@@ -42,10 +42,5 @@ public class SeatService {
 		return true;
 	}
 
-	@Data
-	@AllArgsConstructor
-	static public class Result<T> {
-		private T data;
-	}
 }
 
