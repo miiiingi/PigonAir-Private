@@ -37,7 +37,7 @@ public class WebSecurityConfig {
 		"/swagger/**",
 		"/monitoring/grafana/**",
 		"/monitoring/prometheus/**",
-
+		"/api/v1/queue/allowed/**",
 	};
 
 	private static final String[] SWAGGER_URL_ARRAY = {
