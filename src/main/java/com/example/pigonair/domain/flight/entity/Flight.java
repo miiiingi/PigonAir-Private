@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-// @Table(name = "flight",	indexes = {
-// 	@Index(columnList = "departureTime"),
-// 	@Index(columnList = "origin, destination")})
+@Table(name = "flight",	indexes = {
+	@Index(columnList = "departureTime"),
+	@Index(columnList = "origin, destination")})
 public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
