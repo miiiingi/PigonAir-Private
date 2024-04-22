@@ -18,7 +18,11 @@ jobs:
   build:
     # 실행 환경 지정
     runs-on: ubuntu-latest
-
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
     # Task의 sequence를 명시한다.
     steps:
       - uses: actions/checkout@v2
@@ -59,26 +63,32 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
+      - name: Set Docker Image Tag
+        id: set_tag
+        run: |
+          if [[ "${{ github.event.pull_request.base.ref }}" == "dev" ]]; then
+            echo "::set-output name=tag::dev"
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "release" ]]; then
+            echo "::set-output name=tag::release"
+          fi
+
       - name: Docker build & push to docker repo
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }}
 
   deploy-release:
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
-    # needs를 통해 build job이 수행 성공시에 작업되도록 설정
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # 권한 부여
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-
       - name: AWS EC2 Connection
         uses: appleboy/ssh-action@master
         with:
@@ -87,26 +97,24 @@ jobs:
           key: ${{ secrets.EC2_PEM }}
           port: ${{ secrets.EC2_PORT }}
           timeout: 60s
-          script: | #Docker Image명 기입, port 기입
+          script: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:release
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f
+
   deploy-dev:
     if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev'
-    # needs를 통해 build job이 수행 성공시에 작업되도록 설정
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # 권한 부여
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-
       - name: AWS EC2 Connection
         uses: appleboy/ssh-action@master
         with:
@@ -115,9 +123,9 @@ jobs:
           key: ${{ secrets.EC2_PEM }}
           port: ${{ secrets.EC2_PORT }}
           timeout: 60s
-          script: | #Docker Image명 기입, port 기입
+          script: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:1.0
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:dev
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f
