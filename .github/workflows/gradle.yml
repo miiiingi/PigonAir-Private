@@ -18,7 +18,11 @@ jobs:
   build:
     # 실행 환경 지정
     runs-on: ubuntu-latest
-
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
     # Task의 sequence를 명시한다.
     steps:
       - uses: actions/checkout@v2
