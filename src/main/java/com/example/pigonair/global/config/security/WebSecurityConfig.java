@@ -32,12 +32,8 @@ public class WebSecurityConfig {
 		"/login-page",
 		"/",
 		"/apm/**",
-		"/actuator/**",
 		"/flight/**",
 		"/swagger/**",
-		"/monitoring/grafana/**",
-		"/monitoring/prometheus/**",
-
 	};
 
 	private static final String[] SWAGGER_URL_ARRAY = {
