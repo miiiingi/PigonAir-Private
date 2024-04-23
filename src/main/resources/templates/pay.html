@@ -49,9 +49,10 @@
                                 window.location.href = "/ticket";
                             },
                             error: function (error) {
-                                alert('결제에 실패했습니다!    1');
-                                window.location.href = "/ticket";
                                 alert('Payment verification failed: ' + JSON.stringify(error));
+                                window.location.href = "/ticket";
+                                alert('결제에 실패했습니다!    1');
+
                             }
                         });
                     } else {
