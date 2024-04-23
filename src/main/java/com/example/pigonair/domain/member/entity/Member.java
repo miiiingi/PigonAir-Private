@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-// @Table(name = "member", indexes = {@Index(columnList = "email", unique = true)})
+@Table(name = "member", indexes = {@Index(columnList = "email", unique = true)})
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
