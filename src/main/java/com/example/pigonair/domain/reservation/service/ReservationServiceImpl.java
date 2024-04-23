@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.pigonair.domain.flight.entity.Airport;
 import com.example.pigonair.domain.flight.entity.Flight;
 import com.example.pigonair.domain.flight.repository.FlightRepository;
 import com.example.pigonair.domain.member.entity.Member;
@@ -21,6 +22,8 @@ import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,18 +34,21 @@ public class ReservationServiceImpl implements ReservationService {
     private final FlightRepository flightRepository;
     private final MemberRepository memberRepository;
     private final SeatRepository seatRepository;
+    private final EntityManager entityManager;
 
 	@Override
 	@Transactional
 	public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
 
-		Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
+		// Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
+        Member member = userDetails.getUser();
 
         Seat seat = getSeat(requestDto);      // 좌석 정보 확인 및 가져오기
 
         Flight flight = getFlight(seat);    // 비행기 가져오기
 
         checkIsAvailableSeat(seat); // 예약 가능한 좌석인지 확인
+        entityManager.lock(seat, LockModeType.PESSIMISTIC_WRITE);
 
         Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
         seat.seatPick();    // 좌석 예매 불가로 변경
@@ -71,8 +77,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public void cancelReservation(Long reservation_id, UserDetailsImpl userDetails) {
         Reservation reservation = getReservation(reservation_id);
-        Member member = getMember(userDetails);
-        if(member.equals(reservation.getMember())){
+        Member member = userDetails.getUser();
+        if(reservation.getMember().getId().equals(member.getId())){
             reservation.getSeat().setIsAvailable();
             reservationRepository.delete(reservation);
         }
@@ -84,11 +90,24 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
         // 로그인 정보 확인 및 가져오기
-        Member member = getMember(userDetails);
+        // Member member = getMember(userDetails);
+        Member member = userDetails.getUser();
         // 해당 사용자의 예약 중 결제되지 않은 예약 가져오기
-        List<Reservation> reservations = reservationRepository.findByMemberAndIsPayment(member, false);
+        List<Object[]> reservationInfo = reservationRepository.findReservationInfoByMemberAndIsPaymentWithFlightAndSeat(
+            member, false);
         // responseDto 만들기
-        List<ReservationResponseDto> reservationResponseDtos = getReservationResponseDtos(reservations);
+        List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
+        for (Object[] row : reservationInfo) {
+            Long id = (Long) row[0];
+            LocalDateTime departureDate = (LocalDateTime) row[1];
+            Airport origin = (Airport)row[2];
+            Airport destination = (Airport)row[3];
+            Long seatNumber = (Long) row[4];
+            Long price = (Long) row[5];
+
+            reservationResponseDtos.add(new ReservationResponseDto(id, departureDate, departureDate, origin.name(), destination.name(), seatNumber, price));
+        }
+
 
         return reservationResponseDtos;
     }
@@ -130,25 +149,25 @@ public class ReservationServiceImpl implements ReservationService {
         return reservation;
     }
 
-    private static List<ReservationResponseDto> getReservationResponseDtos(List<Reservation> reservations) {
-        List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
-        reservations.stream().forEach(reservation -> {
-            Long id = reservation.getId();
-            String name = reservation.getMember().getEmail();
-            Flight flight = reservation.getFlight();
-            LocalDateTime departureDate = flight.getDepartureTime();
-            LocalDateTime departureTime = flight.getDepartureTime();
-            String origin = flight.getOrigin().getFullName();
-            String destination = flight.getDestination().getFullName();
-            Long seatNumber = reservation.getSeat().getId();
-            Long price = reservation.getSeat().getPrice();
-            String phoneNumber = reservation.getMember().getPhoneNumber();
-            reservationResponseDtos.add(new ReservationResponseDto(id, name, departureDate, departureTime,
-                    origin, destination, seatNumber, price, phoneNumber));
-
-        });
-        return reservationResponseDtos;
-    }
+    // private static List<ReservationResponseDto> getReservationResponseDtos(List<Reservation> reservations) {
+    //     List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
+    //     reservations.stream().forEach(reservation -> {
+    //         Long id = reservation.getId();
+    //         Flight flight = reservation.getFlight();
+    //         LocalDateTime departureDate = flight.getDepartureTime();
+    //         LocalDateTime departureTime = flight.getDepartureTime();
+    //         String origin = flight.getOrigin().getFullName();
+    //         String destination = flight.getDestination().getFullName();
+    //
+    //         Seat seat = reservation.getSeat();
+    //         Long seatNumber = seat.getId();
+    //         Long price = seat.getPrice();
+    //         reservationResponseDtos.add(new ReservationResponseDto(id,departureDate, departureTime,
+    //                 origin, destination, seatNumber, price));
+    //
+    //     });
+    //     return reservationResponseDtos;
+    // }
 
 
     private Reservation getReservation(Long reservation_id) {
