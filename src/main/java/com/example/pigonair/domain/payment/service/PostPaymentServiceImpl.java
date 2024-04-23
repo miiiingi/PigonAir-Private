@@ -5,7 +5,9 @@ import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.example.pigonair.domain.email.EmailService;
+
+// import com.example.pigonair.domain.email.EmailService;
+
 import com.example.pigonair.domain.payment.dto.EmailDto;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto;
 import com.example.pigonair.domain.payment.entity.Payment;
@@ -24,7 +26,9 @@ public class PostPaymentServiceImpl implements PostPaymentService {
 	private final ReservationRepository reservationRepository;
 	private final PaymentRepository paymentRepository;
 	// private final RabbitTemplate rabbitTemplate;
-	private final EmailService emailService;
+
+	// private final EmailService emailService;
+
 
 
 	@Async("asyncExecutor")
@@ -75,7 +79,8 @@ public class PostPaymentServiceImpl implements PostPaymentService {
 			String recipientEmail = emailDto.email();
 			String subject = "티켓 결제 완료";
 			String body = "티켓 번호: " + emailDto.paymentId();
-			emailService.sendEmail(recipientEmail, subject, body);
+
+			// emailService.sendEmail(recipientEmail, subject, body);
 		} catch (Exception ex) {
 			log.error("Payment 처리 중 오류 발생: {}", ex.getMessage(), ex);
 		}
