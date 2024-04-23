@@ -1,10 +1,11 @@
 package com.example.pigonair.domain.flight.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.pigonair.domain.flight.dto.FlightResponseDto;
+import com.example.pigonair.domain.flight.entity.FlightPage;
 import com.example.pigonair.domain.flight.service.FlightService;
 import com.example.pigonair.global.config.common.exception.CustomException;
 
@@ -48,8 +50,8 @@ public class FlightController {
 
 	@GetMapping("/flight/{start_date}/{end_date}/{departure}/{destination}")
 	public String getFlightsByConditions(
-		@PathVariable("start_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-		@PathVariable("end_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+		@PathVariable("start_date") String startDate,
+		@PathVariable("end_date") String endDate,
 		@PathVariable("departure") String departure,
 		@PathVariable("destination") String destination,
 		@RequestParam(defaultValue = "" + DEFAULT_PAGE) int page,
@@ -59,10 +61,16 @@ public class FlightController {
 		Model model) {
 
 		try {
-			Page<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
-				startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
+			LocalDate startTime = LocalDate.parse(startDate);
+			LocalDate endTime = LocalDate.parse(endDate);
+			LocalDateTime startDateTime = startTime.atStartOfDay();
+			LocalDateTime endDateTime = endTime.atTime(LocalTime.MAX);
+			FlightPage<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
+				startDateTime, endDateTime, departure, destination, page, size, orderBy, orderDirection);
+			// FlightPage<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
+			// 		startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
 			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
-		} catch (CustomException ex) {
+		}catch (CustomException ex) {
 			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
 			return "index";
 		}
@@ -79,5 +87,4 @@ public class FlightController {
 		model.addAttribute("orderByVal", orderBy);
 		model.addAttribute("orderDirectionVal", orderDirection);
 	}
-
 }
