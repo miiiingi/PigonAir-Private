@@ -40,8 +40,8 @@ public class PaymentController {
 		@RequestBody PostPayRequestDto requestDto, Model model) {
 		try {
 			paymentService.postPayProcess(requestDto);
-			List<PaymentResponseDto.TicketResponseDto> responseDto = memberService.getTicketPage(userDetails.getUser());
-			model.addAttribute("responseDto", responseDto);
+			// List<PaymentResponseDto.TicketResponseDto> responseDto = memberService.getTicketPage(userDetails.getUser());
+			// model.addAttribute("responseDto", responseDto);
 			// return "ticket";
 			return ResponseEntity.ok("결제 완료");
 		}catch (Exception e){
