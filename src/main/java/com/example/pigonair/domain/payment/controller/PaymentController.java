@@ -1,7 +1,6 @@
 package com.example.pigonair.domain.payment.controller;
 
-import java.util.List;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.pigonair.domain.member.service.MemberServiceImpl;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto.PostPayRequestDto;
-import com.example.pigonair.domain.payment.dto.PaymentResponseDto;
 import com.example.pigonair.domain.payment.dto.PaymentResponseDto.PayResponseDto;
 import com.example.pigonair.domain.payment.service.PaymentServiceImpl;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
@@ -35,11 +33,19 @@ public class PaymentController {
 	}
 
 	@PostMapping("/pay")
-	public String postPay(@AuthenticationPrincipal UserDetailsImpl userDetails,
+	public ResponseEntity<?> postPay(@AuthenticationPrincipal UserDetailsImpl userDetails,
 		@RequestBody PostPayRequestDto requestDto, Model model) {
-		paymentService.postPayProcess(requestDto);
-		List<PaymentResponseDto.TicketResponseDto> responseDto = memberService.getTicketPage(userDetails.getUser());
-		model.addAttribute("responseDto", responseDto);
-		return "ticket";
+		try {
+			paymentService.postPayProcess(requestDto);
+			// List<PaymentResponseDto.TicketResponseDto> responseDto = memberService.getTicketPage(userDetails.getUser());
+			// model.addAttribute("responseDto", responseDto);
+			// return "ticket";
+			return ResponseEntity.ok("결제 완료");
+		}catch (Exception e){
+			return ResponseEntity.badRequest().build();
+		}
+
+
+
 	}
 }

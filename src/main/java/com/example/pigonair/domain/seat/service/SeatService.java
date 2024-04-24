@@ -3,6 +3,7 @@ package com.example.pigonair.domain.seat.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.pigonair.domain.flight.entity.Flight;
@@ -13,8 +14,6 @@ import com.example.pigonair.domain.seat.repository.SeatRepository;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,7 +22,8 @@ public class SeatService {
 	private final SeatRepository seatRepository;
 	private final FlightRepository flightRepository;
 
-	public Result getSeatingChart(Long flightId) {
+	@Cacheable(value = "seatCache", key = "#flightId")
+	public List<SeatResponseDto> getSeatingChart(Long flightId) {
 		if(!validateFlight(flightId)){
 			throw new CustomException(ErrorCode.NOT_EXITS_FLIGHT);
 		}
@@ -32,7 +32,7 @@ public class SeatService {
 		for (Seat seat : seats) {
 			seatResponseDtos.add(new SeatResponseDto(seat));
 		}
-		return new Result(seatResponseDtos);
+		return seatResponseDtos;
 
 	}
 	public boolean validateFlight(Long flightId){
@@ -40,12 +40,6 @@ public class SeatService {
 			new NullPointerException("해당 비행기는 존재하지 않습니다."));
 
 		return true;
-	}
-
-	@Data
-	@AllArgsConstructor
-	static public class Result<T> {
-		private T data;
 	}
 }
 
