@@ -27,7 +27,6 @@ import com.example.pigonair.global.config.security.UserDetailsImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
 
 @Controller
 @RequestMapping("/seat")
@@ -48,7 +47,6 @@ public class SeatController {
 
 		ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
-		threadStatus(threadMXBean);
 
 		if (threadMXBean.getThreadCount() > 1) {
 			ResponseEntity<AllowedUserResponse> response = waitSystem(request, queue, userDetails.getUser().getId());
@@ -63,13 +61,6 @@ public class SeatController {
 		model.addAttribute("seats", seatsDto);
 
 		return "seats/seatList";
-	}
-
-	private void threadStatus(ThreadMXBean threadMXBean) {
-		System.out.println("registerWaitQueue 총 스레드 수: " + threadMXBean.getThreadCount());
-		System.out.println("registerWaitQueue 현재 활성화된 스레드 수: " + threadMXBean.getThreadCount());
-		System.out.println("registerWaitQueue 현재 대기 중인 스레드 수: " + (threadMXBean.getThreadCount()
-			- threadMXBean.getDaemonThreadCount()));
 	}
 
 	public ResponseEntity<AllowedUserResponse> waitSystem(HttpServletRequest request, String queue, Long userId) {
