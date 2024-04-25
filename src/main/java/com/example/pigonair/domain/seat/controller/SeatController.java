@@ -54,8 +54,8 @@ public class SeatController {
 			if (response.getBody() == null || !response.getBody().allowed()) {
 				// 대기 웹페이지로 리다이렉트
 				return "redirect:http://13.124.86.199:9010/waiting-room?user_id=%d&redirect_url=%s".formatted(
-					userDetails.getUser().getId(), "https://pigonair-dev.shop/seat/%d".formatted(flightId));
-			}
+					userDetails.getUser().getId(), "https://www.naver.com");
+			} //"https://pigonair-dev.shop/seat/%d".formatted(flightId)
 		}
 		List<SeatResponseDto> seatsDto = seatService.getSeatingChart(flightId);
 		model.addAttribute("seats", seatsDto);
