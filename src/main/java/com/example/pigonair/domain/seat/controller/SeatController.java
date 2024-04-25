@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Controller
-@RequestMapping("/flight")
+@RequestMapping("/seat")
 @RequiredArgsConstructor
 public class SeatController {
 
@@ -56,7 +56,7 @@ public class SeatController {
 			if (response.getBody() == null || !response.getBody().allowed()) {
 				// 대기 웹페이지로 리다이렉트
 				return "redirect:http://127.0.0.1:9010/waiting-room?user_id=%d&redirect_url=%s".formatted(
-					userDetails.getUser().getId(), "http://127.0.0.1:8080/flight/%d".formatted(flightId));
+					userDetails.getUser().getId(), "http://127.0.0.1:8080/seat/%d".formatted(flightId));
 			}
 		}
 		List<SeatResponseDto> seatsDto = seatService.getSeatingChart(flightId);
@@ -103,14 +103,6 @@ public class SeatController {
 		ResponseEntity<AllowedUserResponse> response = restTemplate.getForEntity(uri, AllowedUserResponse.class);
 
 		return response;
-	}
-
-	public Mono<Void> saveThreadMetrics(Long currentThread, Long prevThread, Long maxThread, Long diffPresPrev) {
-		String key = "thread_metrics";
-
-		return reactiveRedisTemplate.opsForList()
-			.rightPushAll(key, currentThread.toString(), prevThread.toString(), maxThread.toString(), diffPresPrev.toString())
-			.then();
 	}
 
 }
