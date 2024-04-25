@@ -3,6 +3,7 @@ package com.example.pigonair.domain.reservation.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +16,7 @@ import com.example.pigonair.domain.reservation.entity.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 	// List<Reservation> findByMemberAndIsPayment(Member member, Boolean isPayment);
-
+	@EntityGraph(attributePaths = {"seat", "flight","member"})
 	List<Reservation> findAllByMemberId(Long memberId);
 
 	List<Reservation> findByIsPaymentFalseAndReservationDateBefore(LocalDateTime cutoffDate);
