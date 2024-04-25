@@ -93,11 +93,11 @@
     <form id="flightSearchForm">
         <div class="mb-3">
             <label for="startDate">출발일:</label>
-            <input type="datetime-local" class="form-control" id="startDate" name="start_date" required>
+            <input type="date" class="form-control" id="startDate" name="start_date" required>
         </div>
         <div class="mb-3">
             <label for="endDate">도착일:</label>
-            <input type="datetime-local" class="form-control" id="endDate" name="end_date" required>
+            <input type="date" class="form-control" id="endDate" name="end_date" required>
         </div>
         <div class="mb-3">
             <label for="departure">출발지:</label>
@@ -122,6 +122,7 @@
 
 <div class="button-group">
     <button onclick="redirectToPage('/')" class="btn btn-primary">Home</button>
+    <button onclick="moveToPage('/signup')" class="btn btn-primary">Signup</button>
     <button onclick="redirectToPage('/login-page')" class="btn btn-primary">Login</button>
     <button onclick="redirectToPage('/mypage')" class="btn btn-primary">My Page</button>
     <button onclick="redirectToPage('/ticket')" class="btn btn-primary">My Ticket</button>
@@ -212,6 +213,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+    function moveToPage(page) {
+        const host = 'http://' + window.location.host;
+        window.location.href = host + page;
     }
 </script>
 

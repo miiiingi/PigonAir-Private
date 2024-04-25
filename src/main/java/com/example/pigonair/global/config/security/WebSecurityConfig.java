@@ -32,11 +32,8 @@ public class WebSecurityConfig {
 		"/login-page",
 		"/",
 		"/apm/**",
-		"/actuator/**",
 		"/flight/**",
 		"/swagger/**",
-		"/monitoring/grafana/**",
-		"/monitoring/prometheus/**",
 		"/api/v1/queue/allowed/**",
 	};
 

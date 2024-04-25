@@ -116,7 +116,7 @@ public class PaymentServiceTest {
 		Seat seat = saveTestSeat(flight);
 		Reservation reservation = createAndSaveTestReservation(flight, member, seat);
 
-		PostPayRequestDto requestDto = new PostPayRequestDto(reservation.getId(), seat.getPrice(), "serialNumber123");
+		PostPayRequestDto requestDto = new PostPayRequestDto(reservation.getId(), seat.getPrice(), "serialNumber123",member.getEmail());
 
 		// When
 		paymentService.postPayProcess(requestDto);
@@ -134,7 +134,7 @@ public class PaymentServiceTest {
 		Reservation reservation = createAndSaveTestReservation(flight, member, seat);
 
 		PostPayRequestDto requestDto = new PostPayRequestDto(reservation.getId(), seat.getPrice() + 100,
-			"serialNumber123");
+			"serialNumber123",member.getEmail());
 
 		//When //Then
 		assertThrows(CustomException.class, () -> paymentService.postPayProcess(requestDto));

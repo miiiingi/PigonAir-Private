@@ -7,6 +7,7 @@ import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.seat.entity.Seat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,13 +26,13 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne // 추후에 @ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	private Seat seat;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Flight flight;
 
 	private LocalDateTime reservationDate;

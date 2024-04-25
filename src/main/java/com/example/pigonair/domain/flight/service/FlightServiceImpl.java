@@ -4,6 +4,7 @@ import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
 
 import java.time.LocalDateTime;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.pigonair.domain.flight.dto.FlightResponseDto;
 import com.example.pigonair.domain.flight.entity.Airport;
 import com.example.pigonair.domain.flight.entity.Flight;
+import com.example.pigonair.domain.flight.entity.FlightPage;
 import com.example.pigonair.domain.flight.repository.FlightRepository;
 import com.example.pigonair.global.config.common.exception.CustomException;
 
@@ -48,7 +50,11 @@ public class FlightServiceImpl implements FlightService {
 	}
 
 	@Override
-	public Page<FlightResponseDto> getFlightsByConditions(LocalDateTime startDate, LocalDateTime endDate,
+	// @Cacheable(value = "flightCache", key = "{#departureCode, #destinationCode, #page, #size, #orderBy, #direction}",
+	// 	condition = "#page == 1")
+	// 가장 많이 조회가 될것은 1페이지 --> 1페이지만 캐싱을 해주면 좋을것 같다.
+	@Cacheable(value = "flightCache", key = "{#startDate, #departureCode, #destinationCode, #page, #size, #orderBy, #direction}")
+	public FlightPage<FlightResponseDto> getFlightsByConditions(LocalDateTime startDate, LocalDateTime endDate,
 		String departureCode, String destinationCode, int page, int size, String orderBy, String direction) {
 		try {
 			Sort sort = Sort.by(orderBy);
@@ -66,9 +72,7 @@ public class FlightServiceImpl implements FlightService {
 
 			log.info(String.valueOf(departure));
 
-			Page<Flight> flightsPage = flightRepository.findByDepartureTimeBetweenAndOriginAndDestination(startDate, endDate, departure, destination, pageable);
-
-			return flightsPage.map(FlightResponseDto::new);
+			return new FlightPage<>(flightRepository.findByDepartureTimeBetweenAndOriginAndDestination(startDate, endDate, departure, destination, pageable).map(FlightResponseDto::new));
 		} catch (IllegalArgumentException ex) {
 			log.error("항공편 검색 조건이 잘못되었습니다.", ex);
 			throw new CustomException(INVALID_SEARCH_CONDITION);

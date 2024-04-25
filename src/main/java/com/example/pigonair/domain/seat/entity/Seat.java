@@ -2,12 +2,16 @@ package com.example.pigonair.domain.seat.entity;
 
 import com.example.pigonair.domain.flight.entity.Flight;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.parameters.P;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -17,7 +21,7 @@ public class Seat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Flight flight;
 
 	private Long price;
