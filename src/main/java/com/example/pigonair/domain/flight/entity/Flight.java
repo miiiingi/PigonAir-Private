@@ -27,9 +27,9 @@ public class Flight {
 	private Long id;
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
-	@Enumerated(EnumType.STRING)
+	// @Enumerated(EnumType.STRING)
 	private Airport origin;
-	@Enumerated(EnumType.STRING)
+	// @Enumerated(EnumType.STRING)
 	private Airport destination;
 
 	@Builder
