@@ -57,10 +57,10 @@ public class SeatController {
 		}
 
 		Cookie[] cookies = request.getCookies();
-		Optional<Cookie> cookie1 = Arrays.stream(cookies)
-			.filter(i -> i.getName().equalsIgnoreCase("Authorization"))
-			.findFirst();
-		String token1 = cookie1.orElse(new Cookie("Authorization", "")).getValue();
+		// Optional<Cookie> cookie1 = Arrays.stream(cookies)
+		// 	.filter(i -> i.getName().equalsIgnoreCase("Authorization"))
+		// 	.findFirst();
+		// String token1 = cookie1.orElse(new Cookie("Authorization", "")).getValue();
 
 		if (threadMXBean.getThreadCount() > 1) {
 			ResponseEntity<AllowedUserResponse> response = waitSystem(request, queue, userDetails.getUser().getId());
