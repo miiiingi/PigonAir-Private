@@ -52,7 +52,7 @@ public class SeatController {
 		ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
 		String waitQueueKey = "user-queue-default-token";
-		if(!waitToken.equals("")) {
+		if(!waitToken.equals("default")) {
 			waitQueueAddCookie(response1, waitQueueKey, waitToken);
 		}
 
