@@ -53,7 +53,7 @@ public class FlightServiceImpl implements FlightService {
 	// @Cacheable(value = "flightCache", key = "{#departureCode, #destinationCode, #page, #size, #orderBy, #direction}",
 	// 	condition = "#page == 1")
 	// 가장 많이 조회가 될것은 1페이지 --> 1페이지만 캐싱을 해주면 좋을것 같다.
-	// @Cacheable(value = "flightCache", key = "{#startDate, #departureCode, #destinationCode, #page, #size, #orderBy, #direction}")
+	@Cacheable(value = "flightCache", key = "{#startDate, #departureCode, #destinationCode, #page, #size, #orderBy, #direction}")
 	public FlightPage<FlightResponseDto> getFlightsByConditions(LocalDateTime startDate, LocalDateTime endDate,
 		String departureCode, String destinationCode, int page, int size, String orderBy, String direction) {
 		try {

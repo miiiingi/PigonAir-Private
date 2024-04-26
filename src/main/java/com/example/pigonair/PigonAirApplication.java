@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableJpaAuditing
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
 @EnableScheduling
 @EnableAsync
 public class PigonAirApplication {
