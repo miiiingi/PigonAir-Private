@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.example.pigonair.domain.member.entity.Member;
@@ -41,6 +42,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<TicketResponseDto> getTicketPage(Member member) {
 		List<Reservation> reservations = reservationRepository.findAllByMemberId(member.getId());
 		return reservations.stream()
