@@ -69,7 +69,7 @@ jobs:
           BRANCH_NAME=${GITHUB_REF##*/}
           echo "Branch Name: $BRANCH_NAME"
           echo "${{ github.event.pull_request.base.ref }}"
-          echo "${{ GITHUB_REF }}"
+          echo "${ GITHUB_REF }"
           case "$BRANCH_NAME" in
             "dev")
               echo "::set-output name=tag::dev"
