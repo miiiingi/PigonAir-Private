@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.pigonair.domain.member.dto.MemberRequestDto;
 import com.example.pigonair.global.config.common.exception.CustomException;
 import com.example.pigonair.global.config.common.exception.ErrorCode;
+import com.example.pigonair.global.config.jmeter.JmeterService;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,9 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final JwtUtil jwtUtil;
+	private final JmeterService jmeterService;
 
-	public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+	public JwtAuthenticationFilter(JwtUtil jwtUtil, JmeterService jmeterService) {
 		this.jwtUtil = jwtUtil;
+		this.jmeterService = jmeterService;
 		setFilterProcessesUrl("/loginProcess");
 	}
 
@@ -54,6 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 		Authentication authResult) throws IOException, ServletException {
 		log.info("로그인 성공 및 JWT 생성");
+		jmeterService.setTransactionNameBasedOnJMeterTag(request);
 		String email = ((UserDetailsImpl)authResult.getPrincipal()).getUsername();
 		String token = jwtUtil.createToken(email);
 
@@ -66,6 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException failed) throws IOException, ServletException {
 		log.info("로그인 실패");
+		jmeterService.setTransactionNameBasedOnJMeterTag(request);
 		response.setCharacterEncoding("UTF-8");
 		String responseDto = new ObjectMapper().writeValueAsString(
 			Map.of("message", ErrorCode.INVALID_EMAIL_OR_PASSWORD.getMessage()));

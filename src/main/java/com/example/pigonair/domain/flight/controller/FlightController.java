@@ -16,7 +16,9 @@ import com.example.pigonair.domain.flight.dto.FlightResponseDto;
 import com.example.pigonair.domain.flight.entity.FlightPage;
 import com.example.pigonair.domain.flight.service.FlightService;
 import com.example.pigonair.global.config.common.exception.CustomException;
+import com.example.pigonair.global.config.jmeter.JmeterService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FlightController {
 	private final FlightService flightService;
+	private final JmeterService jmeterService;
 
 	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_SIZE = 10;
@@ -58,7 +61,7 @@ public class FlightController {
 		@RequestParam(defaultValue = "" + DEFAULT_SIZE) int size,
 		@RequestParam(defaultValue = DEFAULT_ORDER_BY) String orderBy,
 		@RequestParam(defaultValue = DEFAULT_ORDER_DIRECTION) String orderDirection,
-		Model model) {
+		Model model, HttpServletRequest request) {
 
 		try {
 			LocalDate startTime = LocalDate.parse(startDate);
@@ -70,6 +73,8 @@ public class FlightController {
 			// FlightPage<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
 			// 		startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
 			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
+
+			jmeterService.setTransactionNameBasedOnJMeterTag(request);
 		}catch (CustomException ex) {
 			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
 			return "index";
@@ -87,4 +92,5 @@ public class FlightController {
 		model.addAttribute("orderByVal", orderBy);
 		model.addAttribute("orderDirectionVal", orderDirection);
 	}
+
 }
