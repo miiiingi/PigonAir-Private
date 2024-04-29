@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "dev", "release" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "dev", "release" ]
+    branches: [ "dev" ]
 # 사용할 인프라의 이름을 변수 형태로 저장 가능
 jobs:
 
@@ -63,49 +63,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      - name: Set Docker Image Tag
-        id: set_tag
-        run: |
-          if [[ "${{ github.event.pull_request.base.ref }}" == "dev" ]]; then
-            echo "::set-output name=tag::dev"
-          elif [[ "${{ github.event.pull_request.base.ref }}" == "release" ]]; then
-            echo "::set-output name=tag::release"
-          fi
-
       - name: Docker build & push to docker repo
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:dev .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:dev
 
-  deploy-release:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-      - name: AWS EC2 Connection
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_PEM }}
-          port: ${{ secrets.EC2_PORT }}
-          timeout: 60s
-          script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:release
-            cd ~
-            sudo docker-compose up -d
-            sudo docker image prune -f
-
-  deploy-dev:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev'
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -126,6 +90,5 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:dev
-            cd ~
-            sudo docker-compose up -d
+            sudo bash deploy-githubActions.sh
             sudo docker image prune -f
