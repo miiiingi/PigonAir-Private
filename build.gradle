@@ -59,6 +59,11 @@ dependencies {
 //    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'               // Jackson Databind
 
     runtimeOnly 'com.h2database:h2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'com.github.codemonstur:embedded-redis:1.0.0'
+
 }
 
 tasks.named('test') {

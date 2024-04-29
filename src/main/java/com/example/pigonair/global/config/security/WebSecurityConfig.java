@@ -34,6 +34,7 @@ public class WebSecurityConfig {
 		"/apm/**",
 		"/flight/**",
 		"/swagger/**",
+		"/api/v1/queue/allowed/**",
 	};
 
 	private static final String[] SWAGGER_URL_ARRAY = {
