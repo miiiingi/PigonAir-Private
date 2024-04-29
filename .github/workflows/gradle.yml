@@ -88,7 +88,6 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
           timeout: 60s
           script: |
-            sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ github.run_number }}
             sudo bash deploy-githubActions.sh ${{ github.run_number }}
             sudo docker image prune -f
