@@ -10,8 +10,8 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "dev", "release" ]
-  pull_request:
-    branches: [ "dev", "release" ]
+  # pull_request:
+  #   branches: [ "dev", "release" ]
 # 사용할 인프라의 이름을 변수 형태로 저장 가능
 jobs:
 
@@ -79,7 +79,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.set_tag.outputs.tag }}
 
   deploy-release:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'release'
+    if: github.event_name == 'push' && github.event.pull_request.base.ref == 'release'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -105,7 +105,7 @@ jobs:
             sudo docker image prune -f
 
   deploy-dev:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'dev'
+    if: github.event_name == 'push' && github.event.pull_request.base.ref == 'dev'
     needs: build
     runs-on: ubuntu-latest
     steps:
