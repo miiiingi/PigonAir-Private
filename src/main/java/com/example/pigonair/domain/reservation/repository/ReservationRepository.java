@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.pigonair.domain.member.entity.Member;
+import com.example.pigonair.domain.reservation.dto.ReservationResponseDto;
 import com.example.pigonair.domain.reservation.entity.Reservation;
 
 @Repository

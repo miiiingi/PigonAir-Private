@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.example.pigonair.global.config.jmeter.JmeterService;
 import com.example.pigonair.global.config.security.jwt.JwtAuthenticationFilter;
 import com.example.pigonair.global.config.security.jwt.JwtAuthorizationFilter;
 import com.example.pigonair.global.config.security.jwt.JwtUtil;
@@ -58,17 +57,15 @@ public class WebSecurityConfig {
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-	private final JmeterService jmeterService;
 
 	public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl adminDetailsService,
 		AuthenticationConfiguration authenticationConfiguration, CustomAccessDeniedHandler customAccessDeniedHandler,
-		CustomAuthenticationEntryPoint customAuthenticationEntryPoint, JmeterService jmeterService) {
+		CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
 		this.jwtUtil = jwtUtil;
 		this.userDetailsService = adminDetailsService;
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.customAccessDeniedHandler = customAccessDeniedHandler;
 		this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
-		this.jmeterService = jmeterService;
 	}
 
 	@Bean
@@ -78,7 +75,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, jmeterService);
+		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
 		filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 		return filter;
 	}

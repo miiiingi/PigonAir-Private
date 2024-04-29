@@ -3,7 +3,9 @@ package com.example.pigonair.domain.payment.service;
 import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
+// import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

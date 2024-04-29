@@ -57,7 +57,6 @@ dependencies {
     //RabbitMQ
 //    implementation 'org.springframework.boot:spring-boot-starter-amqp'                  // Spring Boot AMQP
 //    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'               // Jackson Databind
-    implementation 'co.elastic.apm:apm-agent-api:1.28.0'
 
     runtimeOnly 'com.h2database:h2'
 

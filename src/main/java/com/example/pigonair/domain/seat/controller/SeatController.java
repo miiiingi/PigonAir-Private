@@ -23,7 +23,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.example.pigonair.domain.seat.dto.AllowedUserResponse;
 import com.example.pigonair.domain.seat.dto.SeatResponseDto;
 import com.example.pigonair.domain.seat.service.SeatService;
-import com.example.pigonair.global.config.jmeter.JmeterService;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 
 import jakarta.servlet.http.Cookie;
@@ -73,7 +72,6 @@ public class SeatController {
 			} //"https://pigonair-dev.shop/seat/%d".formatted(flightId)
 		}
 		List<SeatResponseDto> seatsDto = seatService.getSeatingChart(flightId);
-		jmeterService.setTransactionNameBasedOnJMeterTag(request);
 		model.addAttribute("seats", seatsDto);
 
 		return "seats/seatList";
@@ -125,4 +123,5 @@ public class SeatController {
 
 		return response;
 	}
+
 }

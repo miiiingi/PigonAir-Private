@@ -7,16 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.pigonair.global.config.jmeter.JmeterService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-
 @Controller
-@RequiredArgsConstructor
 public class PageController {
-	private final JmeterService jmeterService;
-
 	@GetMapping("/signup")
 	public String signupPage(Model model) {
 		model.addAttribute("ErrorMessage", null);
@@ -29,8 +21,7 @@ public class PageController {
 	}
 
 	@GetMapping("/")
-	public String homePage(HttpServletRequest request) {
-		jmeterService.setTransactionNameBasedOnJMeterTag(request);
+	public String homePage() {
 		return "index";
 	}
 
@@ -43,5 +34,4 @@ public class PageController {
 	@ResponseBody
 	public void returnNoFavicon() {
 	}
-
 }

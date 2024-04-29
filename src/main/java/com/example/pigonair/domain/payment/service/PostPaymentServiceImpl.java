@@ -5,6 +5,9 @@ import static com.example.pigonair.global.config.common.exception.ErrorCode.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+
+// import com.example.pigonair.domain.email.EmailService;
+
 import com.example.pigonair.domain.payment.dto.EmailDto;
 import com.example.pigonair.domain.payment.dto.PaymentRequestDto;
 import com.example.pigonair.domain.payment.entity.Payment;

@@ -18,10 +18,8 @@ import com.example.pigonair.domain.reservation.dto.ReservationRequestDto;
 import com.example.pigonair.domain.reservation.dto.ReservationResponseDto;
 import com.example.pigonair.domain.reservation.service.ReservationService;
 import com.example.pigonair.global.config.common.exception.CustomException;
-import com.example.pigonair.global.config.jmeter.JmeterService;
 import com.example.pigonair.global.config.security.UserDetailsImpl;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,18 +29,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservationController {
 
 	private final ReservationService reservationService;
-	private final JmeterService jmeterService;
 	private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
 	@PostMapping("/reservation") // 예약 진행
 	public ResponseEntity<?> saveReservation(@RequestBody ReservationRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request) {
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		try {
 			long startTime = System.currentTimeMillis();
 			reservationService.saveReservation(requestDto, userDetails);
 			long executionTime = System.currentTimeMillis() - startTime;
 			log.info("saveReservation method executed in {} milliseconds", executionTime);
-			jmeterService.setTransactionNameBasedOnJMeterTag(request);
 			return ResponseEntity.ok().build();
 		} catch (CustomException e) {
 			log.error("Error occurred during saveReservation: {}", e.getMessage());
@@ -50,16 +46,15 @@ public class ReservationController {
 		}
 	}
 
-	@GetMapping("/reservation")    // 예약 확인
+	@GetMapping("/reservation")	// 예약 확인
 	public String getReservations(@AuthenticationPrincipal UserDetailsImpl userDetails,
-		Model model, HttpServletRequest request) {
+		Model model) {
 		try {
 			long startTime = System.currentTimeMillis();
 			List<ReservationResponseDto> reservations = reservationService.getReservations(userDetails);
 			long executionTime = System.currentTimeMillis() - startTime;
 			log.info("getReservations method executed in {} milliseconds", executionTime);
 			model.addAttribute("reservations", reservations);
-			jmeterService.setTransactionNameBasedOnJMeterTag(request);
 			return "reservation/reservation_history";
 		} catch (CustomException e) {
 			log.error("Error occurred during getReservations: {}", e.getMessage());
