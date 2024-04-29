@@ -66,9 +66,10 @@ jobs:
       - name: Set Docker Image Tag
         id: set_tag
         run: |
-          if [[ "${{ github.event.pull_request.base.ref }}" == "dev" ]]; then
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          if [ "$BRANCH_NAME" == "dev" ]; then
             echo "::set-output name=tag::dev"
-          elif [[ "${{ github.event.pull_request.base.ref }}" == "release" ]]; then
+          elif [ "$BRANCH_NAME" == "release" ]; then
             echo "::set-output name=tag::release"
           fi
 
