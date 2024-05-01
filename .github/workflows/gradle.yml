@@ -79,6 +79,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+
       - name: AWS EC2 Connection
         uses: appleboy/ssh-action@master
         with:
@@ -91,3 +92,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ github.run_number }}
             sudo bash deploy-githubActions.sh ${{ github.run_number }}
             sudo docker image prune -f
+

@@ -1,11 +1,15 @@
 package com.example.pigonair.member;
+
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import com.example.pigonair.domain.member.entity.Member;
 import com.example.pigonair.domain.member.repository.MemberRepository;
 @SpringBootTest
