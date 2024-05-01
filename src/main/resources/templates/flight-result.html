@@ -37,6 +37,7 @@
         tr:hover {
             background-color: #f2f2f2;
         }
+
         /* Center pagination */
         .pagination-container {
             text-align: center;
@@ -51,6 +52,16 @@
 </head>
 <body>
 <h1>Flight Search Results</h1>
+
+<form id="flightSearchForm">
+    <span>Flight Detailed Search</span>
+    <div class="mb-3">
+        <label for="startTime">출발 시간:</label>
+        <input type="time" class="form-control" id="startTime" name="start_time" required>
+    </div>
+    <button type="submit">시간 업데이트</button>
+</form>
+
 <form action="" method="get">
     <div>
         <label for="orderBy">Order By:</label>
@@ -143,5 +154,33 @@
         </button>
     </div>
 </div>
+
+<script>
+    document.getElementById('flightSearchForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // 현재 URL에서 경로 세그먼트 파싱
+        const pathSegments = window.location.pathname.split('/');
+
+        // 현재 URL에서 날짜 정보 가져오기 (예: 2024-04-01)
+        const currentDate = pathSegments[2]; // 날짜 정보의 위치는 URL에 따라 조정될 수 있음
+
+        //2024-04-22T23:15 가 이미 되어있으면 2024-04-22 만 남긴다.
+        currentDateSplit = currentDate.split("T")[0]
+        // 사용자 입력 시간 가져오기
+        const startTime = document.getElementById('startTime').value; // 'HH:MM'
+        if (!startTime) {
+            console.error('No start time provided.');
+            return; // Exit the function if no start time is provided
+        }
+
+        // 새 URL 구성
+        let newPath;
+        newPath = `/flight/${currentDateSplit}T${startTime}/${pathSegments[3]}/${pathSegments[4]}/${pathSegments[5]}`;
+
+        // 리다이렉트 실행
+        window.location.href = newPath;
+    });
+</script>
 </body>
 </html>
