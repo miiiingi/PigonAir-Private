@@ -56,7 +56,7 @@
     <div class="grid-layout">
       <div th:each="seat, iterStat : ${seats.subList(0, 40)}">
         <div th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
-             th:text="${seat.seatId}"
+             th:text="${seat.number}"
              th:attr="data-seat-id=${seat.seatId}"
              onclick="toggleSeatSelection(this)">
         </div>
@@ -67,7 +67,7 @@
     <div class="grid-layout">
       <div th:each="seat, iterStat : ${seats.subList(40, 80)}"
            th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
-           th:text="${seat.seatId}"
+           th:text="${seat.number}"
            th:attr="data-seat-id=${seat.seatId}"
            onclick="toggleSeatSelection(this)">
       </div>
@@ -83,7 +83,7 @@
 
   function toggleSeatSelection(seatElement) {
     if (selectedSeat === null) {
-      const seatNumber = seatElement.textContent.trim();
+      const seatNumber = seatElement.getAttribute('data-seat-id')
       console.log(seatNumber);
       // 아무 좌석도 선택되지 않은 경우
       if (seatElement.classList.contains('available')) {

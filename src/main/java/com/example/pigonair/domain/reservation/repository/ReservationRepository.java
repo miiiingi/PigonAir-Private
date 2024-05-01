@@ -14,13 +14,13 @@ import com.example.pigonair.domain.reservation.entity.Reservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-  
+
 	@EntityGraph(attributePaths = {"seat", "flight", "member"})
 	List<Reservation> findAllByMemberId(Long memberId);
 
 	List<Reservation> findByIsPaymentFalseAndReservationDateBefore(LocalDateTime cutoffDate);
 
-	@Query("SELECT r.id, f.departureTime, f.origin, f.destination, s.id, s.price " +
+	@Query("SELECT r.id, f.departureTime, f.origin, f.destination, s.number, s.price " +
 		"FROM Reservation r " +
 		"JOIN r.flight f " +
 		"JOIN r.seat s " +

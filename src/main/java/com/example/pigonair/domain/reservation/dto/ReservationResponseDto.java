@@ -7,7 +7,7 @@ public record ReservationResponseDto(
 	LocalDateTime departureTime,
 	String origin,
 	String destination,
-	Long seatNumber,
+	int seatNumber,
 	Long price
 
 ) {

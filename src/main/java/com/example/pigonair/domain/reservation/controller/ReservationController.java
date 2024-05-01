@@ -40,7 +40,6 @@ public class ReservationController {
 		try {
 			reservationService.saveReservation(requestDto, userDetails);
 			jmeterService.setTransactionNameBasedOnJMeterTag(request);
-
 			return ResponseEntity.ok().build();
 		} catch (CustomException e) {
 			return ResponseEntity.status(e.getHttpStatus()).build();

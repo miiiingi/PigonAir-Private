@@ -42,6 +42,7 @@ public class PaymentController {
 		try {
 			paymentService.postPayProcess(requestDto);
 			jmeterService.setTransactionNameBasedOnJMeterTag(request);
+
 			return ResponseEntity.ok("결제 완료");
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
