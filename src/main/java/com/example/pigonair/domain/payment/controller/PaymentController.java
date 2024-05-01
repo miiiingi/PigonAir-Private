@@ -41,16 +41,11 @@ public class PaymentController {
 		@RequestBody PostPayRequestDto requestDto, Model model, HttpServletRequest request) {
 		try {
 			paymentService.postPayProcess(requestDto);
-			// List<PaymentResponseDto.TicketResponseDto> responseDto = memberService.getTicketPage(userDetails.getUser());
-			// model.addAttribute("responseDto", responseDto);
-			// return "ticket";
 			jmeterService.setTransactionNameBasedOnJMeterTag(request);
 			return ResponseEntity.ok("결제 완료");
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
-
 	}
-
 
 }
