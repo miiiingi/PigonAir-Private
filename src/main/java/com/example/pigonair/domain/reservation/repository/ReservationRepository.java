@@ -14,8 +14,8 @@ import com.example.pigonair.domain.reservation.entity.Reservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-	// List<Reservation> findByMemberAndIsPayment(Member member, Boolean isPayment);
-	@EntityGraph(attributePaths = {"seat", "flight","member"})
+  
+	@EntityGraph(attributePaths = {"seat", "flight", "member"})
 	List<Reservation> findAllByMemberId(Long memberId);
 
 	List<Reservation> findByIsPaymentFalseAndReservationDateBefore(LocalDateTime cutoffDate);
@@ -25,6 +25,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 		"JOIN r.flight f " +
 		"JOIN r.seat s " +
 		"WHERE r.member = :member AND r.isPayment = :isPayment")
-	List<Object[]> findReservationInfoByMemberAndIsPaymentWithFlightAndSeat(@Param("member") Member member, @Param("isPayment") boolean isPayment);
+	List<Object[]> findReservationInfoByMemberAndIsPaymentWithFlightAndSeat(@Param("member") Member member,
+		@Param("isPayment") boolean isPayment);
 
 }

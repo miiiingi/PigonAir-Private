@@ -131,6 +131,7 @@
         }).then(response => {
           if (response.ok) {
             // 서버에서 응답을 받은 후 처리
+            alert('예약이 성공적으로 처리되었습니다. 15분내에 결제를 완료해주세요');
             window.location.href = '/reservation';
           } else if (response.status === 404) {
             // 404 Not Found 에러 처리

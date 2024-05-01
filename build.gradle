@@ -24,7 +24,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -41,6 +40,7 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     //Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     //Prometheus
     implementation 'io.micrometer:micrometer-registry-prometheus'
     // iamport
@@ -55,7 +55,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     //RabbitMQ
-//    implementation 'org.springframework.boot:spring-boot-starter-amqp'                  // Spring Boot AMQP
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'                  // Spring Boot AMQP
 //    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'               // Jackson Databind
     implementation 'co.elastic.apm:apm-agent-api:1.28.0'
 

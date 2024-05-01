@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -37,7 +36,6 @@ public class SeatController {
 
 	private final SeatService seatService;
 	private final JmeterService jmeterService;
-	private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
 	RestTemplate restTemplate = new RestTemplate();
 

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,6 @@ public class ReservationServiceImpl implements ReservationService {
 	@Transactional
 	public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
 
-		// Member member = getMember(userDetails); // 로그인 정보 확인 및 가져오기
         Member member = userDetails.getUser();
 
         Seat seat = getSeat(requestDto);      // 좌석 정보 확인 및 가져오기
@@ -49,10 +49,9 @@ public class ReservationServiceImpl implements ReservationService {
 
         checkIsAvailableSeat(seat); // 예약 가능한 좌석인지 확인
         entityManager.lock(seat, LockModeType.PESSIMISTIC_WRITE);
-
-        Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
         seat.seatPick();    // 좌석 예매 불가로 변경
-        reservationRepository.save(reservation);
+        makeAndSaveReservation(member, seat, flight);
+
     }
 
     @Transactional
@@ -62,15 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         List<Reservation> expiredReservations = reservationRepository.findByIsPaymentFalseAndReservationDateBefore(fifteenMinutesAgo);
 
-        for (Reservation reservation : expiredReservations) {
-            // isPayment 업데이트
-            reservationRepository.delete(reservation);
-
-            // Seat의 isAvailable 업데이트
-            Seat seat = reservation.getSeat();
-            seat.setIsAvailable();
-            seatRepository.save(seat);
-        }
+        returnSeatIsAvailable(expiredReservations);
     }
 
     @Override
@@ -78,14 +69,8 @@ public class ReservationServiceImpl implements ReservationService {
     public void cancelReservation(Long reservation_id, UserDetailsImpl userDetails) {
         Reservation reservation = getReservation(reservation_id);
         Member member = userDetails.getUser();
-        if(reservation.getMember().getId().equals(member.getId())){
-            reservation.getSeat().setIsAvailable();
-            reservationRepository.delete(reservation);
-        }
-        else
-            throw new CustomException(ErrorCode.FORBIDDEN);
+        deleteReservation(reservation, member);
     }
-
 
     @Override
     public List<ReservationResponseDto> getReservations(UserDetailsImpl userDetails) {
@@ -105,7 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
             Long seatNumber = (Long) row[4];
             Long price = (Long) row[5];
 
-            reservationResponseDtos.add(new ReservationResponseDto(id, departureDate, departureDate, origin.name(), destination.name(), seatNumber, price));
+            reservationResponseDtos.add(new ReservationResponseDto(id, departureDate, origin.name(), destination.name(), seatNumber, price));
         }
 
 
@@ -149,26 +134,35 @@ public class ReservationServiceImpl implements ReservationService {
         return reservation;
     }
 
-    // private static List<ReservationResponseDto> getReservationResponseDtos(List<Reservation> reservations) {
-    //     List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
-    //     reservations.stream().forEach(reservation -> {
-    //         Long id = reservation.getId();
-    //         Flight flight = reservation.getFlight();
-    //         LocalDateTime departureDate = flight.getDepartureTime();
-    //         LocalDateTime departureTime = flight.getDepartureTime();
-    //         String origin = flight.getOrigin().getFullName();
-    //         String destination = flight.getDestination().getFullName();
-    //
-    //         Seat seat = reservation.getSeat();
-    //         Long seatNumber = seat.getId();
-    //         Long price = seat.getPrice();
-    //         reservationResponseDtos.add(new ReservationResponseDto(id,departureDate, departureTime,
-    //                 origin, destination, seatNumber, price));
-    //
-    //     });
-    //     return reservationResponseDtos;
-    // }
+    private void makeAndSaveReservation(Member member, Seat seat, Flight flight) {
+        Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
+        try{
+            reservationRepository.save(reservation);
+        }catch (DataAccessException e){
+            throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
+        }
+    }
 
+    private void returnSeatIsAvailable(List<Reservation> expiredReservations) {
+        for (Reservation reservation : expiredReservations) {
+            // isPayment 업데이트
+            reservationRepository.delete(reservation);
+
+            // Seat의 isAvailable 업데이트
+            Seat seat = reservation.getSeat();
+            seat.setIsAvailable();
+            seatRepository.save(seat);
+        }
+    }
+
+    private void deleteReservation(Reservation reservation, Member member) {
+        if(reservation.getMember().getId().equals(member.getId())){
+            reservation.getSeat().setIsAvailable();
+            reservationRepository.delete(reservation);
+        }
+        else
+            throw new CustomException(ErrorCode.FORBIDDEN);
+    }
 
     private Reservation getReservation(Long reservation_id) {
         Reservation reservation = reservationRepository.findById(reservation_id).orElseThrow(()->

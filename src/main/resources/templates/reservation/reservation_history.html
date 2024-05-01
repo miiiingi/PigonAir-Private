@@ -77,8 +77,7 @@
     <table>
         <thead>
         <tr>
-            <th>날짜</th>
-            <th>출발 시간</th>
+            <th>출발 일시</th>
             <th>출발지</th>
             <th>목적지</th>
             <th>좌석 번호</th>
@@ -88,8 +87,7 @@
         <tbody>
         <!-- 타임리프를 사용하여 reservations 모델을 렌더링 -->
         <tr th:each="reservation : ${reservations}">
-            <td th:text="${reservation.departureDate}">날짜</td>
-            <td th:text="${reservation.departureTime}">출발 시간</td>
+            <td th:text="${reservation.departureTime}">출발일시</td>
             <td th:text="${reservation.origin}">출발지</td>
             <td th:text="${reservation.destination}">목적지</td>
             <td th:text="${reservation.seatNumber}">좌석번호</td>

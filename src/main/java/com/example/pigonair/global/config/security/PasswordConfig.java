@@ -1,4 +1,4 @@
-package com.example.pigonair.global.config.security.jwt;
+package com.example.pigonair.global.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

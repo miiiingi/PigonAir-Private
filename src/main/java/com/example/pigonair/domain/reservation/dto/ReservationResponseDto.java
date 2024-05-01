@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public record ReservationResponseDto(
 	Long id,
-	LocalDateTime departureDate,
 	LocalDateTime departureTime,
 	String origin,
 	String destination,

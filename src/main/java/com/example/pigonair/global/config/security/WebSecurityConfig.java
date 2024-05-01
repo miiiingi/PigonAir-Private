@@ -20,7 +20,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import com.example.pigonair.global.config.jmeter.JmeterService;
 import com.example.pigonair.global.config.security.jwt.JwtAuthenticationFilter;
 import com.example.pigonair.global.config.security.jwt.JwtAuthorizationFilter;
+import com.example.pigonair.global.config.security.jwt.JwtExceptionFilter;
 import com.example.pigonair.global.config.security.jwt.JwtUtil;
+import com.example.pigonair.global.config.security.refreshtoken.TokenService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +33,9 @@ public class WebSecurityConfig {
 	private static final String[] APP_WHITE_LIST = {
 		"/signup",
 		"/login-page",
+		"/error-page",
+		"/actuator/health",
+		"/actuator/info",
 		"/",
 		"/apm/**",
 		"/flight/**",
@@ -53,22 +58,23 @@ public class WebSecurityConfig {
 	};
 
 	private final JwtUtil jwtUtil;
+	private final TokenService tokenService;
 	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 	private final JmeterService jmeterService;
 
 	public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl adminDetailsService,
 		AuthenticationConfiguration authenticationConfiguration, CustomAccessDeniedHandler customAccessDeniedHandler,
-		CustomAuthenticationEntryPoint customAuthenticationEntryPoint, JmeterService jmeterService) {
+		CustomAuthenticationEntryPoint customAuthenticationEntryPoint, JmeterService jmeterService, TokenService tokenService) {
 		this.jwtUtil = jwtUtil;
 		this.userDetailsService = adminDetailsService;
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.customAccessDeniedHandler = customAccessDeniedHandler;
 		this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
 		this.jmeterService = jmeterService;
+		this.tokenService = tokenService;
 	}
 
 	@Bean
@@ -78,14 +84,18 @@ public class WebSecurityConfig {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, jmeterService);
+		JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, tokenService, jmeterService);
 		filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 		return filter;
 	}
 
 	@Bean
 	public JwtAuthorizationFilter jwtAuthorizationFilter() {
-		return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+		return new JwtAuthorizationFilter(jwtUtil, userDetailsService, tokenService);
+	}
+	@Bean
+	public JwtExceptionFilter jwtExceptionFilter() {
+		return new JwtExceptionFilter(jwtUtil, tokenService);
 	}
 
 	@Bean
@@ -129,7 +139,8 @@ public class WebSecurityConfig {
 				.requestMatchers(SWAGGER_URL_ARRAY).permitAll()
 				.anyRequest().authenticated()
 		);
-		http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
+		http.addFilterBefore(jwtExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling((exceptionConfig) -> exceptionConfig
 				.authenticationEntryPoint(customAuthenticationEntryPoint)
@@ -140,8 +151,10 @@ public class WebSecurityConfig {
 			logout
 				.logoutUrl("/logout")
 				.addLogoutHandler((request, response, authentication) -> {
-					// 사실 굳이 내가 세션 무효화하지 않아도 됨.
-					// LogoutFilter가 내부적으로 해줌.
+					String accessToken = jwtUtil.getTokenFromRequest(request);
+					if (accessToken != null && !accessToken.isEmpty()) {
+						tokenService.removeTokenInfo(accessToken);
+					}
 					HttpSession session = request.getSession();
 					if (session != null) {
 						session.invalidate();

@@ -29,7 +29,6 @@ public class PaymentServiceImpl implements PaymentService {
 	private final PaymentRepository paymentRepository;
 	@Value("${iamport.impKey}")
 	private String impKey;
-	// private final RabbitTemplate rabbitTemplate;
 
 	@Override
 	@Transactional
@@ -50,12 +49,6 @@ public class PaymentServiceImpl implements PaymentService {
 		checkPay(requestDto, reservation);
 		reservation.updateIsPayment();
 		postPaymentService.savePayInfoAndSendMail(requestDto);
-
-		//결제 후 결제 여부 변경
-		// Long paymentId = savePayInfo(requestDto);
-		// EmailDto.EmailSendDto emailSendDto = new EmailDto.EmailSendDto(paymentId, requestDto.email());
-		// sendPaymentCompletedEvent(emailSendDto);
-
 	}
 
 	private static void checkPay(PostPayRequestDto requestDto, Reservation reservation) {
@@ -70,10 +63,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 	}
 
-	// private void sendPaymentCompletedEvent(EmailDto.EmailSendDto emailSendDto) {
-	// 	rabbitTemplate.convertAndSend("payment.exchange", "payment.key", emailSendDto);
-	// }
-
 	@Override
 	@Transactional
 	public Long savePayInfo(PostPayRequestDto postPayRequestDto) { // 추후 데이터 삽입 시 외래키만 삽입하는 것으로 변경하는 것 고려
@@ -83,15 +72,6 @@ public class PaymentServiceImpl implements PaymentService {
 		Payment savePayment = paymentRepository.save(payment);
 		return savePayment.getId();
 	}
-
-	// @Transactional
-	// public void updateSeatUnAvailable(Reservation reservation) {
-	// 	Seat seat = reservation.getSeat();
-	// 	if (!seat.isAvailable()) {
-	// 		throw new CustomException(UNAVAILABLE_SEAT);
-	// 	}
-	// 	seat.updateIsAvailable();
-	// }
 
 	private String getUlid() {
 		Ulid ulid = new Ulid();
