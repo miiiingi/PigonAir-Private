@@ -31,6 +31,8 @@ public class WebSecurityConfig {
 	private static final String[] APP_WHITE_LIST = {
 		"/signup",
 		"/login-page",
+		"/actuator/health",
+		"/actuator/info",
 		"/",
 		"/apm/**",
 		"/flight/**",
