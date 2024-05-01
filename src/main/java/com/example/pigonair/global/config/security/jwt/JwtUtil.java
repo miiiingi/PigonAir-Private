@@ -13,20 +13,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.example.pigonair.global.config.common.exception.ErrorCode;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Getter
+@Slf4j(topic = "JWT Util")
 public class JwtUtil {
 
 	// Header KEY 값
@@ -36,10 +41,15 @@ public class JwtUtil {
 	// Token 식별자
 	public static final String BEARER_PREFIX = "Bearer ";
 	// 토큰 만료시간
-	private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
 	@Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
 	private String secretKey;
+
+	@Value("${spring.jwt.token.access-expiration-time}")
+	private long accessExpirationTime;
+
+	@Value("${spring.jwt.token.refresh-expiration-time}")
+	private long refreshExpirationTime;
 	private Key key;
 	private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -55,15 +65,31 @@ public class JwtUtil {
 	// JWT 생성
 	public String createToken(String email) {
 		Date date = new Date();
+		Date expireDate = new Date(date.getTime() + accessExpirationTime); // 만료 시간 설정 부분
 
 		return BEARER_PREFIX +
 			Jwts.builder()
 				.setSubject(email) // 사용자 식별자값(ID)
 				.claim("email", email)
-				.setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+				.setExpiration(expireDate) // 만료 시간
 				.setIssuedAt(date) // 발급일
 				.signWith(key, signatureAlgorithm) // 암호화 알고리즘 ***
 				.compact();
+	}
+
+	public String createRefreshToken() {
+		Date now = new Date();
+		Date expireDate = new Date(now.getTime() + refreshExpirationTime);
+		Claims claims = Jwts
+			.claims();
+
+		// refresh Token 반환
+		return BEARER_PREFIX + Jwts.builder()
+			.setIssuedAt(now)
+			.setExpiration(expireDate)
+			.setClaims(claims)
+			.signWith(key, signatureAlgorithm) // 암호화 알고리즘 ***
+			.compact();
 	}
 
 	// JWT Cookie 에 저장
@@ -84,27 +110,35 @@ public class JwtUtil {
 	// JWT 토큰 substring
 	public String substringToken(String tokenValue) {
 		if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-			return tokenValue.substring(7);
+			return tokenValue.split(" ")[1].trim();
 		}
 		logger.error("Not Found Token");
 		throw new NullPointerException("Not Found Token");
 	}
 
 	// 토큰 검증
-	public boolean validateToken(String token) {
+	public void validateToken(String token, String email) throws
+		/*
+		액세스 토큰을 검증
+		만약 액세스 토큰이 유효하지 않다면 JwtExceptionfilter에서 리프레쉬 토큰을 이용하여 액세스 토큰을 재발급
+		 */
+		ExpiredTokenException,
+		UnsupportedJwtException,
+		SecurityException,
+		MalformedJwtException,
+		IllegalArgumentException {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-			return true;
-		} catch (SecurityException | MalformedJwtException | SignatureException e) {
-			logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
 		} catch (ExpiredJwtException e) {
-			logger.error("Expired JWT token, 만료된 JWT token 입니다.");
-		} catch (UnsupportedJwtException e) {
-			logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-		} catch (IllegalArgumentException e) {
-			logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+			throw new ExpiredTokenException(e.getHeader(), e.getClaims(),
+				ErrorCode.ACCESS_TOKEN_ERROR.getMessage(), token, email);
 		}
-		return false;
+	}
+
+	public void validateRefreshToken(String token){
+		if (token == null || token.isEmpty()) {
+			throw new ExpiredJwtException(null, null, ErrorCode.REFRESH_TOKEN_ERROR.getMessage());
+		}
 	}
 
 	public Claims getUserInfoFromToken(String token) {

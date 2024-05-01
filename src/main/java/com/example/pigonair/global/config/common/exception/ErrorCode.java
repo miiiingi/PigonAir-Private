@@ -25,7 +25,9 @@ public enum ErrorCode {
     INVALID_SEARCH_CONDITION("INVALID_SEARCH_CONDITION", "불가능한 검색 조건입니다.", HttpStatus.BAD_REQUEST),
 	INVALID_PATH_VARIABLE("INVALID_PATH_VARIABLE", "출발지 또는 도착지가 잘못되었습니다.", HttpStatus.BAD_REQUEST),
 	DATABASE_ERROR("DATABASE_ERROR", "데이터베이스 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-	NOT_EXITS_FLIGHT("NOT_EXITS_FLIGHT","해당하는 비행기가 존재하지 않습니다.",HttpStatus.BAD_REQUEST);
+	NOT_EXITS_FLIGHT("NOT_EXITS_FLIGHT","해당하는 비행기가 존재하지 않습니다.",HttpStatus.BAD_REQUEST),
+    ACCESS_TOKEN_ERROR("ACCESS_TOKEN_ERROR", "Access Token expired. Please Re-issue Access Token.", HttpStatus.INTERNAL_SERVER_ERROR),
+    REFRESH_TOKEN_ERROR("REFRESH_TOKEN_ERROR", "Refresh Token is missing or empty", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
 	private final String key;
