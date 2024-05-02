@@ -12,6 +12,7 @@ public class PaymentResponseDto {
 		LocalDateTime departureTime,
 		Airport origin,
 		Airport destination,
+		int seatNumber,
 		String name,
 		boolean isPayment
 	) {
@@ -21,6 +22,7 @@ public class PaymentResponseDto {
 				reservation.getFlight().getDepartureTime(),
 				reservation.getFlight().getOrigin(),
 				reservation.getFlight().getDestination(),
+				reservation.getSeat().getNumber(),
 				reservation.getMember().getName(),
 				reservation.isPayment()
 			);

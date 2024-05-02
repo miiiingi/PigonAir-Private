@@ -1,8 +1,5 @@
 package com.example.pigonair.domain.flight.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -34,23 +31,6 @@ public class FlightController {
 	private static final String DEFAULT_ORDER_BY = "departureTime";
 	private static final String DEFAULT_ORDER_DIRECTION = "ASC";
 
-	@GetMapping("/flight")
-	public String getAllFlights(
-		@RequestParam(defaultValue = "" + DEFAULT_PAGE) int page,
-		@RequestParam(defaultValue = "" + DEFAULT_SIZE) int size,
-		@RequestParam(defaultValue = DEFAULT_ORDER_BY) String orderBy,
-		@RequestParam(defaultValue = DEFAULT_ORDER_DIRECTION) String orderDirection,
-		Model model) {
-		try {
-			Page<FlightResponseDto> flightsPage = flightService.getAllFlights(page, size, orderBy, orderDirection);
-			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
-		} catch (CustomException ex) {
-			model.addAttribute("ErrorMessage", ex.getErrorCode().getMessage());
-			return "index";
-		}
-		return "flight-result";
-	}
-
 	@GetMapping("/flight/{start_date}/{end_date}/{departure}/{destination}")
 	public String getFlightsByConditions(
 		@PathVariable("start_date") String startDate,
@@ -64,14 +44,8 @@ public class FlightController {
 		Model model, HttpServletRequest request) {
 
 		try {
-			LocalDate startTime = LocalDate.parse(startDate);
-			LocalDate endTime = LocalDate.parse(endDate);
-			LocalDateTime startDateTime = startTime.atStartOfDay();
-			LocalDateTime endDateTime = endTime.atTime(LocalTime.MAX);
 			FlightPage<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
-				startDateTime, endDateTime, departure, destination, page, size, orderBy, orderDirection);
-			// FlightPage<FlightResponseDto> flightsPage = flightService.getFlightsByConditions(
-			// 		startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
+					startDate, endDate, departure, destination, page, size, orderBy, orderDirection);
 			populateModel(model, flightsPage, page, size, orderBy, orderDirection);
 
 			jmeterService.setTransactionNameBasedOnJMeterTag(request);

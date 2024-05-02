@@ -48,8 +48,8 @@ public class PostPaymentServiceImpl implements PostPaymentService {
 		Reservation reservation = reservationRepository.findById(postPayRequestDto.id()).orElseThrow(() ->
 			new CustomException(RESERVATION_NOT_FOUND));
 		Payment payment = new Payment(reservation, postPayRequestDto.serialNumber());
-		Payment savePayment = paymentRepository.save(payment);
-		return savePayment.getId();
+		paymentRepository.save(payment);
+		return reservation.getId();
 	}
 
 

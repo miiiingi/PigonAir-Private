@@ -13,6 +13,12 @@ import com.example.pigonair.domain.flight.entity.Flight;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
+	// List<Flight> findAllByIdBetween(Long start, Long end);
+
 	Page<Flight> findByDepartureTimeBetweenAndOriginAndDestination(
-		LocalDateTime startDate, LocalDateTime endDate, Airport departure, Airport destination, Pageable pageable);
+		LocalDateTime startDate,
+		LocalDateTime endDate,
+		Airport departure,
+		Airport destination,
+		Pageable pageable);
 }

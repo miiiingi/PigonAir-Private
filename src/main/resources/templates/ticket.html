@@ -61,6 +61,7 @@
                 <p><strong>출발일:</strong> <span th:text="${ticket.departureTime}">Departure Time</span></p>
                 <p><strong>출발지:</strong> <span th:text="${ticket.origin}">Origin</span></p>
                 <p><strong>도착지:</strong> <span th:text="${ticket.destination}">Destination</span></p>
+                <p><strong>좌석 번호:</strong> <span th:text="${ticket.seatNumber}">seatNumber</span></p>
                 <p><strong>탑승자 이름:</strong> <span th:text="${ticket.name}">Passenger Name</span></p>
                 <p><strong>결제 여부:</strong> <span th:text="${ticket.isPayment ? '결제 완료' : '미결제'}">Payment Status</span>
                     <th:block th:if="${!ticket.isPayment}">
