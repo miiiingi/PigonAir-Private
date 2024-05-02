@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1E90FF;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto; /* Center the table horizontally */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1E90FF;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        /* Center pagination */
+        .pagination-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Style pagination buttons */
+        .pagination-container button {
+            margin: 0 5px; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+<h1>Flight Search Results</h1>
+<form action="" method="get">
+    <div>
+        <label for="orderBy">Order By:</label>
+        <select name="orderBy" id="orderBy">
+            <option value="id" th:selected="${orderBy == 'id'}">ID</option>
+            <option value="departureTime" th:selected="${orderBy == 'departureTime'}">Departure Time</option>
+            <option value="arrivalTime" th:selected="${orderBy == 'arrivalTime'}">Arrival Time</option>
+            <!-- 다른 정렬 기준 추가 -->
+        </select>
+
+        <label for="orderDirection">Order Direction:</label>
+        <select name="orderDirection" id="orderDirection">
+            <option value="ASC" th:selected="${orderDirection == 'ASC'}">Ascending</option>
+            <option value="DESC" th:selected="${orderDirection == 'DESC'}">Descending</option>
+        </select>
+
+        <label for="pageSize">Page Size:</label>
+        <select name="size" id="pageSize">
+            <option value="10" th:selected="${size == 10}">10</option>
+            <option value="20" th:selected="${size == 20}">20</option>
+            <option value="50" th:selected="${size == 50}">50</option>
+        </select>
+
+        <label for="page">Page:</label>
+        <input type="number" name="page" id="page" value="${page}" min="1">
+
+        <button type="submit">Apply</button>
+    </div>
+</form>
+
+<!-- 비행 정보 테이블 -->
+<table>
+    <!-- 테이블 헤더 -->
+    <thead>
+    <tr>
+        <th>Flight ID</th>
+        <th>Departure Date</th>
+        <th>Departure Time</th>
+        <th>Arrival Date</th>
+        <th>Arrival Time</th>
+        <th>Origin</th>
+        <th>Destination</th>
+    </tr>
+    </thead>
+    <!-- 테이블 바디 -->
+    <tbody>
+    <!-- 비행 정보 루프 -->
+    <tr th:each="flight : ${flights}">
+        <td th:text="${flight.id}"></td>
+        <!-- Parse and format departure date and time -->
+        <td th:text="${#temporals.format(flight.departureTime, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(flight.departureTime, 'HH시 MM분')}"></td>
+        <!-- Parse and format arrival date and time -->
+        <td th:text="${#temporals.format(flight.arrivalTime, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(flight.arrivalTime, 'HH시 MM분')}"></td>
+        <td th:text="${flight.origin}"></td>
+        <td th:text="${flight.destination}"></td>
+        <td>
+            <a th:href="@{'/flight/' + ${flight.id}}">Select Seats</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${totalPages > 1}" class="pagination-container">
+    <div>
+        <button>
+            <a th:href="@{'?page=1&orderBy=' + ${orderByVal} + '&size=' +${flightSize} + '&orderDirection=' + ${orderDirectionVal}}">First</a>
+        </button>
+        <button th:if="${currentPage > 1}">
+            <a th:href="@{'?page=' + ${currentPage - 1} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Previous</a>
+        </button>
+
+        <!-- Display pagination links for 5 pages at a time -->
+        <span th:each="pageNum : ${#numbers.sequence(currentPage - 2 > 0 ? currentPage - 2 : 1,
+                                  currentPage + 2 <= totalPages ? currentPage + 2 : totalPages)}">
+            <button>
+                <a th:href="@{'?page=' + ${pageNum} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}"
+                   th:class="${pageNum == currentPage ? 'current-page' : ''}">
+                    <span th:text="${pageNum}"></span>
+                </a>
+            </button>
+        </span>
+
+        <button th:if="${currentPage < totalPages}">
+            <a th:href="@{'?page=' + ${currentPage + 1} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Next</a>
+        </button>
+        <button>
+            <a th:href="@{'?page=' + ${totalPages} + '&size=' +${flightSize} + '&orderBy=' + ${orderByVal} + '&orderDirection=' + ${orderDirectionVal}}">Last</a>
+        </button>
+    </div>
+</div>
+</body>
+</html>
