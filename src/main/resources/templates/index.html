@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1519974719765-e6559eac2575');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            color: black;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 1);
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        button.btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Flight Search</h2>
+    <form id="flightSearchForm">
+        <div class="mb-3">
+            <label for="startDate">출발일:</label>
+            <input type="datetime-local" class="form-control" id="startDate" name="start_date" required>
+        </div>
+        <div class="mb-3">
+            <label for="endDate">도착일:</label>
+            <input type="datetime-local" class="form-control" id="endDate" name="end_date" required>
+        </div>
+        <div class="mb-3">
+            <label for="departure">출발지:</label>
+            <select class="form-select" id="departure" name="departure" required>
+                <option value="">출발 공항 선택</option>
+                <!-- 동적으로 추가되는 옵션 -->
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="destination">도착지:</label>
+            <select class="form-select" id="destination" name="destination" required>
+                <option value="">도착 공항 선택</option>
+                <!-- 동적으로 추가되는 옵션 -->
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="button" onclick="submitFlightSearchForm()" class="btn btn-primary">검색</button>
+        </div>
+    </form>
+    <div id="alertContainer" class="alert" style="display: none;"></div>
+</div>
+
+<div class="button-group">
+    <button onclick="redirectToPage('/')" class="btn btn-primary">Home</button>
+    <button onclick="redirectToPage('/login-page')" class="btn btn-primary">Login</button>
+    <button onclick="redirectToPage('/mypage')" class="btn btn-primary">My Page</button>
+    <button onclick="redirectToPage('/ticket')" class="btn btn-primary">My Ticket</button>
+</div>
+
+<script>
+    const departureSelect = document.getElementById('departure');
+    const destinationSelect = document.getElementById('destination');
+
+    function populateAirportOptions() {
+        const airports = [
+            { code: 'JFK', name: '존 F. 케네디 국제공항' },
+            { code: 'LAX', name: '로스앤젤레스 국제공항' },
+            { code: 'ORD', name: '오헤어 국제공항' },
+            { code: 'ATL', name: '하트스필드-잭슨 애틀랜타 국제공항' },
+            { code: 'DXB', name: '두바이 국제공항' },
+            { code: 'LHR', name: '히드로 공항' },
+            { code: 'CDG', name: '샤를 드 골 공항' },
+            { code: 'AMS', name: '스키폴 공항' },
+            { code: 'SIN', name: '싱가포르 창이공항' },
+            { code: 'PEK', name: '베이징首都 국제공항' },
+            { code: 'ICN', name: '인천국제공항' },
+            { code: 'SYD', name: '시드니 공항' },
+            { code: 'FRA', name: '프랑크푸르트 공항' },
+            { code: 'DEN', name: '덴버 국제공항' },
+            { code: 'SFO', name: '샌프란시스코 국제공항' },
+            { code: 'HND', name: '도쿄 하네다 공항' },
+            { code: 'GMP', name: '김포 국제공항' },
+            { code: 'CJJ', name: '청주 국제공항' },
+            { code: 'CJU', name: '제주 국제공항' }
+        ];
+
+        airports.forEach(airport => {
+            const option = new Option(airport.name, airport.code);
+            departureSelect.appendChild(option);
+            destinationSelect.appendChild(option.cloneNode(true));
+        });
+    }
+
+    populateAirportOptions();
+
+    function submitFlightSearchForm() {
+        // Get form data
+        var formData = new FormData(document.getElementById("flightSearchForm"));
+
+        // Check if required fields are selected
+        var startDate = formData.get("start_date");
+        var endDate = formData.get("end_date");
+        var departure = formData.get("departure");
+        var destination = formData.get("destination");
+
+        // If any required field is not selected, show alert and return
+        if (!startDate || !endDate || !departure || !destination) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '<div class="alert alert-danger" role="alert">모든 필수 필드를 선택해주세요.</div>';
+            alertContainer.style.display = 'block';
+            return;
+        }
+
+        // Construct URL with formatted datetime values
+        var formattedStartDate = startDate.replace("T", " ") + ":00";
+        var formattedEndDate = endDate.replace("T", " ") + ":00";
+
+        // Format date-time values in ISO 8601 format
+        var formattedStartDateISO = startDate.replace(" ", "T");
+        var formattedEndDateISO = endDate.replace(" ", "T");
+
+        // Redirect to the constructed URL
+        window.location.href = "/flight/" + formattedStartDateISO + "/" + formattedEndDateISO + "/" + departure + "/" + destination;
+    }
+</script>
+
+<script>
+    function redirectToPage(page) {
+        const host = 'http://' + window.location.host;
+        fetch('/checkLogin')
+            .then(response => response.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // Redirect to the requested page if logged in
+                    window.location.href = host + page;
+                } else {
+                    // Redirect to the login page if not logged in
+                    alert("로그인이 필요합니다.");
+                    window.location.href = host + '/login-page';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
