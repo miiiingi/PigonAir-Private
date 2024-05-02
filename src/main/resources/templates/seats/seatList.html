@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Train Seat Layout</title>
+  <style>
+    #seatLayout {
+      display: flex;
+      flex-direction: column; /* 위아래로 요소 배치 */
+      align-items: center; /* 좌우 가운데 정렬 */
+      gap: 50px;
+    }
+
+    .seat-container {
+      display: inline-block;
+      text-align: center;
+    }
+
+    .seat {
+      width: 30px; /* 좌석 너비 */
+      height: 30px; /* 좌석 높이 */
+      display: flex;
+      justify-content: center; /* 가로 가운데 정렬 */
+      align-items: center; /* 세로 가운데 정렬 */
+    }
+
+    .available {
+      background-color: lightblue; /* 가용한 좌석 색상 */
+      cursor: pointer; /* 클릭 가능한 커서 스타일 */
+    }
+
+    .not-available {
+      background-color: darkgray; /* 가용하지 않은 좌석 색상 */
+      cursor: not-allowed; /* 클릭 불가능한 커서 스타일 */
+    }
+
+    .grid-layout {
+      display: inline-grid;
+      grid-template-columns: repeat(20, 30px); /* 20개의 열 */
+      grid-gap: 5px; /* 그리드 간격 */
+    }
+
+    body {
+      display: flex;
+      justify-content: center; /* 가로 가운데 정렬 */
+      align-items: center; /* 세로 가운데 정렬 */
+      height: 100vh; /* 화면 전체 높이에 맞게 설정 */
+      margin: 0; /* 기본 마진 제거 */
+    }
+  </style>
+</head>
+<body>
+<div id="seatLayout">
+  <div class="seat-container">
+    <div class="grid-layout">
+      <div th:each="seat, iterStat : ${seats.getData().subList(0, 40)}">
+        <div th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
+             th:text="${seat.seatId}"
+             th:attr="data-seat-id=${seat.seatId}"
+             onclick="toggleSeatSelection(this)">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="seat-container">
+    <div class="grid-layout">
+      <div th:each="seat, iterStat : ${seats.getData().subList(40, 80)}"
+           th:classappend="${!seat.isAvailable} ? 'seat not-available' : 'seat available'"
+           th:text="${seat.seatId}"
+           th:attr="data-seat-id=${seat.seatId}"
+           onclick="toggleSeatSelection(this)">
+      </div>
+    </div>
+  </div>
+</div>
+<button onclick="bookSelectedSeat()" style="position: fixed; bottom: 20px; right: 20px;">예약하기</button>
+
+<script>
+  let selectedSeat = null;
+  let selectedSeatNumber = null;
+  let selectedFlight = null;
+
+  function toggleSeatSelection(seatElement) {
+    if (selectedSeat === null) {
+      const seatNumber = seatElement.textContent.trim();
+      console.log(seatNumber);
+      // 아무 좌석도 선택되지 않은 경우
+      if (seatElement.classList.contains('available')) {
+        // 좌석이 available인 경우 선택
+        seatElement.classList.remove('available');
+        seatElement.classList.add('not-available');
+        selectedSeat = seatElement;
+        selectedSeatNumber = seatNumber;
+        selectedFlight = seatElement.getAttribute('data-flight'); // Thymeleaf에서 data-flight로 설정한 속성 가져오기
+        // JSON 데이터 출력
+        console.log({
+          seat: selectedSeatNumber,
+          flight: selectedFlight
+        });
+      }
+    } else if (selectedSeat === seatElement) {
+      // 이미 선택된 좌석을 다시 클릭한 경우 선택 취소
+      seatElement.classList.remove('not-available');
+      seatElement.classList.add('available');
+      selectedSeat = null;
+      selectedSeatNumber = null;
+      selectedFlight = null;
+    } else {
+      // 이미 다른 좌석이 선택된 경우 메시지 표시
+      alert('이미 좌석을 선택하셨습니다.');
+    }
+  }
+
+  function bookSelectedSeat() {
+    if (selectedSeat !== null) {
+      // 선택된 좌석이 있으면 예약할 것인지 확인하는 메시지 표시
+      const confirmation = confirm('좌석 번호 ' + selectedSeatNumber + '을(를) 예약하시겠습니까?');
+      if (confirmation) {
+        // 사용자가 확인을 누르면 해당 좌석을 예약하기 링크로 이동
+        const data = {
+          seatId: selectedSeatNumber,
+          flightId: selectedFlight
+        };
+        fetch('/reservation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then(response => {
+          if (response.ok) {
+            // 서버에서 응답을 받은 후 처리
+            window.location.href = '/reservation';
+          } else if (response.status === 404) {
+            // 404 Not Found 에러 처리
+            alert('잘못된 요청입니다');
+            location.reload();
+          } else if (response.status === 409) {
+            // 400 Bad Request 에러 처리
+            alert('이미 선택된 좌석입니다');
+            location.reload();
+          } else {
+            // 기타 오류 처리
+            alert('예약을 처리하는 동안 문제가 발생했습니다.');
+            location.reload();
+          }
+        }).catch(error => {
+          console.error('Error:', error);
+          alert('예약을 처리하는 동안 문제가 발생했습니다.');
+          location.reload();
+        });
+      }
+    } else {
+      // 선택된 좌석이 없으면 메시지 표시
+      alert('좌석을 선택해주세요.');
+      location.reload();
+    }
+  }
+</script>
+
+</body>
+</html>
