@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v6.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 표준 GitHub 자동 생성 토큰 사용
         with:
           config-name: release-note.yml
+          target_commitish: 'main'  # "main" 브랜치를 기준으로 설정
