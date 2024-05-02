@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Figon Air</title>
+</head>
+
+
+<body>
+
+<div id="signup">
+    <div class="content">
+
+        <div class="body">
+
+            <form id="signup-form" action="/signup" method="post" onsubmit="return submitForm()">
+                <label for="name">이름</label>
+                <div>
+                    <input name="name" id="name" placeholder="이름">
+                </div>
+                <label for="email">이메일</label>
+                <div>
+                    <input name="email" id="email" placeholder="이메일">
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                </div>
+                <div>
+                    <input type="password" name="password" id="password" placeholder="비밀번호">
+                </div>
+
+                <div>
+                    <input type="password" name="confirm-password" id="confirm-password"
+                           placeholder="비밀번호 확인" onkeyup="validatePassword()">
+                </div>
+                <label for="phoneNumber">전화번호</label>
+                <div>
+                    <input type="phoneNumber" name="phoneNumber" id="phoneNumber" placeholder="010-0000-0000">
+                </div>
+                <div id="password-match" style="color: red;"></div>
+
+
+                <!-- 에러 및 인증 메시지 표시를 위한 요소 -->
+                <div id="message-box" style="color: red;">
+                    <p th:text="${ErrorMessage}" style="color: red;"></p>
+                </div>
+
+                <!-- 회원 가입 버튼 -->
+                <button id="signup-btn" onclick="submitForm()">제출</button>
+
+
+            </form>
+            <!-- 홈 화면으로 이동하는 버튼 -->
+            <button onclick="goToHomePage()">홈 화면으로 이동</button>
+        </div>
+    </div>
+</div>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+<script>
+    function validatePassword() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm-password").value;
+
+        if (password != confirmPassword) {
+            document.getElementById("password-match").innerHTML = "비밀번호와 비밀번호 확인란의 문자가 다릅니다.";
+        } else {
+            document.getElementById("password-match").innerHTML = "";
+        }
+    }
+
+    // 에러 및 인증 메시지 표시
+    function showMessage(message, color) {
+        const messageDiv = document.getElementById("message-box");
+        messageDiv.innerHTML = message;
+        messageDiv.style.color = color;
+    }
+
+    // 회원 가입 폼 전송
+    function submitForm() {
+        let email = document.getElementById("email").value;
+        if (email === "") {
+            showMessage("이메일을 입력해주세요.", "red");
+            return false;
+        }
+        return true;
+    }
+
+    // 홈 화면으로 이동
+    function goToHomePage() {
+        window.location.href = '/';
+    }
+</script>
+</body>
+
+</html>

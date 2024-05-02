@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>예매 정보</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .reservation-info-container {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .reservation-info {
+            margin-bottom: 20px;
+        }
+
+        .reservation-info p {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .reservation-info strong {
+            display: inline-block;
+            color: #007bff;
+        }
+
+        .btn-payment {
+            font-size: 14px;
+            padding: 0.375rem 0.75rem;
+            margin-left: 15px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" th:if="${!responseDto.isEmpty()}">
+    <h1>예매 정보</h1>
+    <div th:each="ticket : ${responseDto}">
+        <div class="reservation-info-container">
+            <div class="reservation-info">
+                <p><strong>예매 번호:</strong> <span th:text="${ticket.reservationId}">Reservation ID</span></p>
+                <p><strong>출발일:</strong> <span th:text="${ticket.departureTime}">Departure Time</span></p>
+                <p><strong>출발지:</strong> <span th:text="${ticket.origin}">Origin</span></p>
+                <p><strong>도착지:</strong> <span th:text="${ticket.destination}">Destination</span></p>
+                <p><strong>탑승자 이름:</strong> <span th:text="${ticket.name}">Passenger Name</span></p>
+                <p><strong>결제 여부:</strong> <span th:text="${ticket.isPayment ? '결제 완료' : '미결제'}">Payment Status</span>
+                    <th:block th:if="${!ticket.isPayment}">
+                        <button class="btn btn-primary btn-payment"
+                                th:attr="data-reservation-id=${ticket.reservationId}">결제
+                        </button>
+                    </th:block>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="btn-container">
+        <a href="/" class="btn btn-primary">확인</a>
+    </div>
+</div>
+<div class="container" th:if="${responseDto.isEmpty()}">
+    <h1>예매 정보</h1>
+    <p>예약된 티켓이 없습니다.</p>
+    <div class="btn-container">
+        <a href="/" class="btn btn-primary">확인</a>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-payment').click(function () {
+            var reservationId = $(this).data('reservation-id');
+            window.location.href = "/pay/" + reservationId;
+        });
+    });
+</script>
+</body>
+</html>
