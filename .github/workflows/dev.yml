@@ -5,11 +5,9 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Pull Request On Dev
+name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
 # 사용할 인프라의 이름을 변수 형태로 저장 가능
@@ -92,3 +90,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ github.run_number }}
             sudo bash deploy-githubActions.sh ${{ github.run_number }}
             sudo docker image prune -f
+

@@ -5,10 +5,10 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Push On Main
+name: Java CI with Gradle
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
 # 사용할 인프라의 이름을 변수 형태로 저장 가능
 jobs:
@@ -68,18 +68,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
 
-      - name: Set default tag if empty
-        if: steps.get_version.outputs.tag_name == ''
-        run: echo "::set-output name=tag_name::latest"
-        id: default_tag
-
       - name: Docker build & push to docker repo
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name || steps.default_tag.outputs.tag_name }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name || steps.default_tag.outputs.tag_name }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }}
 
   deploy:
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
+    # needs를 통해 build job이 수행 성공시에 작업되도록 설정
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -101,7 +98,7 @@ jobs:
           timeout: 60s
           script: | #Docker Image명 기입, port 기입
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name || steps.default_tag.outputs.tag_name }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }}
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f

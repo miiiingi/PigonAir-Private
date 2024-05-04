@@ -1,10 +1,9 @@
 name: Release Drafter
 
 on:
-  push:
-    branches:
-      - main
-      - release/*  # 릴리즈 브랜치에도 반응하도록 추가
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -17,7 +16,7 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v6.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 표준 GitHub 자동 생성 토큰 사용
         with:
-          config-name: release-note.yml  # 설정 파일명 확인 필요
-          commitish: main  # 동적으로 현재 브랜치를 참조하도록 수정
+          config-name: release-note.yml
+          commitish: 'main'  # "main" 브랜치를 기준으로 설정
