@@ -129,6 +129,23 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var startDateInput = document.getElementById("startDate");
+        var endDateInput = document.getElementById("endDate");
+
+        // 오늘 날짜 설정
+        var today = new Date().toISOString().split('T')[0];
+        startDateInput.setAttribute("min", today);
+        endDateInput.setAttribute("min", today);
+
+        // startDate 값이 변경될 때 endDate의 min 속성 업데이트
+        startDateInput.addEventListener('change', function () {
+            endDateInput.min = startDateInput.value;  // startDate의 값을 endDate의 최소값으로 설정
+        });
+    });
+</script>
+
+<script>
     const departureSelect = document.getElementById('departure');
     const destinationSelect = document.getElementById('destination');
 
