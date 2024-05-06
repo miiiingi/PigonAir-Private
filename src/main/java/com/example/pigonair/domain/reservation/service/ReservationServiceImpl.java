@@ -142,12 +142,11 @@ public class ReservationServiceImpl implements ReservationService {
 
 	private void makeAndSaveReservation(Member member, Seat seat, Flight flight) {
 		Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
-		// try{
-		//     reservationRepository.save(reservation);
-		// }catch (DataAccessException e){
-		//     throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
-		// }
-		reservationRepository.save(reservation);
+		try{
+		    reservationRepository.save(reservation);
+		}catch (DataAccessException e){
+		    throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
+		}
 	}
 
 	private void returnSeatIsAvailable(List<Reservation> expiredReservations) {
