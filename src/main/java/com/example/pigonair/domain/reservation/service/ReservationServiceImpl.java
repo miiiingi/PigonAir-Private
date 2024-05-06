@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,12 +143,11 @@ public class ReservationServiceImpl implements ReservationService {
 
 	private void makeAndSaveReservation(Member member, Seat seat, Flight flight) {
 		Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
-		// try{
-		//     reservationRepository.save(reservation);
-		// }catch (DataAccessException e){
-		//     throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
-		// }
-		reservationRepository.save(reservation);
+		try{
+		    reservationRepository.save(reservation);
+		}catch (DataAccessException e){
+		    throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
+		}
 	}
 
 	private void returnSeatIsAvailable(List<Reservation> expiredReservations) {
