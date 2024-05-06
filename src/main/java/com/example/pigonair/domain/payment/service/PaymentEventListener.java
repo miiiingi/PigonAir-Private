@@ -26,8 +26,8 @@ public class PaymentEventListener {
 
 			emailService.sendEmail(recipientEmail, subject, body);
 		} catch (Exception ex) {
-			log.error("Payment 처리 중 오류 발생: {}", ex.getMessage(), ex);
-			log.error("실패 Email : {}",emailDto.email());
+			log.info("Payment 처리 중 오류 발생: {}", ex.getMessage(), ex);
+			log.info("실패 Email : {}",emailDto.email());
 		}
 
 	}

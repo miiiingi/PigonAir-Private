@@ -45,7 +45,6 @@ public class ReservationServiceImpl implements ReservationService {
 	@Transactional
 	public void saveReservation(ReservationRequestDto requestDto, UserDetailsImpl userDetails) {
 
-
 		Member member = userDetails.getUser();
 
 		Seat seat = getSeat(requestDto);      // 좌석 정보 확인 및 가져오기
@@ -143,10 +142,10 @@ public class ReservationServiceImpl implements ReservationService {
 
 	private void makeAndSaveReservation(Member member, Seat seat, Flight flight) {
 		Reservation reservation = makeReservation(member, seat, flight);    // 예약 만들기
-		try{
-		    reservationRepository.save(reservation);
-		}catch (DataAccessException e){
-		    throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
+		try {
+			reservationRepository.save(reservation);
+		} catch (DataAccessException e) {
+			throw new CustomException(ErrorCode.ALREADY_RESERVED_SEAT);
 		}
 	}
 
@@ -175,6 +174,5 @@ public class ReservationServiceImpl implements ReservationService {
 			new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 		return reservation;
 	}
-
 
 }
