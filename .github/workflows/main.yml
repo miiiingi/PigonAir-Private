@@ -18,6 +18,11 @@ jobs:
   build:
     # 실행 환경 지정
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
     outputs:
       resolved_version: ${{ steps.get_version.outputs.tag_name }}
 
