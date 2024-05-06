@@ -71,11 +71,10 @@ jobs:
       - name: Docker build & push to docker repo
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }} .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }}
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:main .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:main
 
   deploy:
-    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
     # needs를 통해 build job이 수행 성공시에 작업되도록 설정
     needs: build
     runs-on: ubuntu-latest
@@ -98,7 +97,7 @@ jobs:
           timeout: 60s
           script: | #Docker Image명 기입, port 기입
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ steps.get_version.outputs.tag_name }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:main
             cd ~
             sudo docker-compose up -d
             sudo docker image prune -f
