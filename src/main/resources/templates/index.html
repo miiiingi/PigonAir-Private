@@ -133,15 +133,28 @@
         var startDateInput = document.getElementById("startDate");
         var endDateInput = document.getElementById("endDate");
 
-        // 오늘 날짜 설정
-        var today = new Date().toISOString().split('T')[0];
-        startDateInput.setAttribute("min", today);
-        endDateInput.setAttribute("min", today);
+        // startDateInput과 endDateInput의 값을 업데이트하는 함수
+        function updateDates() {
+            var today = new Date().toLocaleDateString("en-CA", {
+                timeZone: "Asia/Seoul",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+            });
 
-        // startDate 값이 변경될 때 endDate의 min 속성 업데이트
+            startDateInput.min = today;
+            endDateInput.min = today;
+        }
+
         startDateInput.addEventListener('change', function () {
             endDateInput.min = startDateInput.value;  // startDate의 값을 endDate의 최소값으로 설정
         });
+
+        endDateInput.addEventListener('change', function () {
+            startDateInput.max = endDateInput.value;  // startDate의 최댓값을 endDate의 값으로 설정
+        });
+
+        updateDates();
     });
 </script>
 
@@ -198,10 +211,6 @@
             alertContainer.style.display = 'block';
             return;
         }
-
-        // Construct URL with formatted datetime values
-        var formattedStartDate = startDate.replace("T", " ") + ":00";
-        var formattedEndDate = endDate.replace("T", " ") + ":00";
 
         // Format date-time values in ISO 8601 format
         var formattedStartDateISO = startDate.replace(" ", "T");
