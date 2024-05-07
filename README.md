@@ -9,16 +9,35 @@
 # 🏛️ 서비스 아키텍처  
 ![Untitled](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/06a6f476-b0d8-4eff-806c-7d04de47f1d0)
 
-# ⚡ 기술 스택
-| Backend | Category | Tech |
-|----------|----------|----------|
-|  | Application  | SpringBoot |
-|  | | Spring JPA |
-|  | | Spring Security|
-|  | | WebFlux |
-|  | | RabbitMQ |
-|  | Platform  | Ubuntu |
-|  | DB  | AWS RDS(Mysql) |
-|  | DB  | AWS Elastic Cache(Redis) |
-|  | DB  | Redis |
+# ⚡ 기술 스택  
+## BackEnd  
+| Category | Tech |
+|----------|----------|
+| Application  | SpringBoot |
+| | Spring JPA |
+| | Spring Security|
+| | WebFlux |
+| | RabbitMQ |
+| Platform  | Ubuntu |
+| DB  | AWS RDS(Mysql) |
+|  | AWS Elastic Cache(Redis) |
+|  | Redis |
+| DevOps  | AWS EC2 |
+|  | Docker |
+|  | AWS ALB |
+|  | AWS Auto Scaling Group |
+| CI\/CD  | Github Actions |
+|  | Docker |
+| Testing  | Junit5 |
+|  | Apache Jmeter |
+| Monitoring - Performance Test  | Elastic APM |
+| Monitoring - System Metric, Logging  | File Beat |
+|  | Metric Beat |  
 
+## FrontEnd  
+| Tech |
+|----------|
+| HTML |
+| JavaScript |
+| CSS |
+| ThymeLeaf |
