@@ -61,7 +61,7 @@ Wiki Link
 | 이름 | 담당 역할 | Github |
 |----------|----------|----------|
 | 이성욱(팀장)  |  | |
-| 김동휘 | - 좌석 조회 Front-End 구현 및 Back-End 구현 <br> - 대기열 WebFlux + Redis로 구현 | [Github](https://github.com/coolhwi)|
-| 김민기 | - Spring Security, Jwt를 이용하여 인증, 인가 기능 구현 <br> - 인증, 인가 관련한 에러 처리 <br> - Redis를 이용한 액세스 토큰 및 리프레쉬 토큰 기능 구현 <br> - Github Actions, Docker를 이용한 CI\/CD 파이프라인 구축 <br> - AWS EC2 서버 환경 구축 <br> - certbot을 이용한 https 보안 처리 구현 <br> - nginx 웹서버를 이용하여 리버스 프록시 구현 <br> - ELK Stack, File Beat, Metric Beat 이용하여 System Metric 모니터링 구축 <br> - Elastic APM을 이용하여 Performance Test 모니터링 구축 <br> - Jmeter Tag를 이용하여 Jmeter의 결과를 ELK Stack에 통합시키는 파이프라인 구축   <br> - System Metric, Container Log, Jmeter 결과를 한 번에 볼 수 있는 대쉬보드 구축 <br> - AWS ALB를 이용하여 가용성 확보 작업 <br> - AWS Auto Scaling Group을 이용하여 가용성 확보 작업 <br> - 테스트 시나리오 설계 및 테스트 실행 <br> - Jmeter CLI를 사용하는 테스트 스크립트 작성  | [Github](https://github.com/miiiingi)|
+| 김동휘 | - 좌석 조회 Front-End 구현 및 Back-End 구현 <br> - 대기열 WebFlux + Redis로 구현 | [Link](https://github.com/coolhwi)|
+| 김민기 | - Spring Security, Jwt를 이용하여 인증, 인가 기능 구현 <br> - 인증, 인가 관련한 에러 처리 <br> - Redis를 이용한 액세스 토큰 및 리프레쉬 토큰 기능 구현 <br> - Github Actions, Docker를 이용한 CI\/CD 파이프라인 구축 <br> - AWS EC2 서버 환경 구축 <br> - certbot을 이용한 https 보안 처리 구현 <br> - nginx 웹서버를 이용하여 리버스 프록시 구현 <br> - ELK Stack, File Beat, Metric Beat 이용하여 System Metric 모니터링 시스템 구축 <br> - Elastic APM 병목 현상 모니터링 시스템 구축 <br> - Jmeter Tag를 이용하여 Jmeter의 결과를 ELK Stack에 통합시키는 파이프라인 구축   <br> - System Metric, Container Log, Jmeter 결과를 한 번에 볼 수 있는 대쉬보드 구축 <br> - AWS ALB를 이용하여 가용성 확보 작업 <br> - AWS Auto Scaling Group을 이용하여 가용성 확보 작업 <br> - 테스트 시나리오 설계 및 테스트 실행 <br> - Jmeter CLI 테스트 스크립트 자동화  | [Link](https://github.com/miiiingi)|
 | 송유하 |  | |
 | 신수현 |  | |
