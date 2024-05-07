@@ -1,5 +1,5 @@
 # 프로젝트 명 : Pigon Air[항공권 티켓팅 서비스]  
-![Group 28 (1)](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/66802943-fc77-498f-88fb-6c1b674ace08)  
+![Group 28 (1)](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/66802943-fc77-498f-88fb-6c1b674ace08)
 ₩₩₩
 - 항공권 특가와 같이 대규모 트래픽이 있는 상황에서도 안정적인 예약 및 결제  
 - 실시간 모니터링으로 애플리케이션 및 DB의 병목 상태 확인 가능  
