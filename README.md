@@ -10,46 +10,15 @@
 ![Untitled](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/06a6f476-b0d8-4eff-806c-7d04de47f1d0)
 
 # ⚡ 기술 스택
-<table width="100%">
-<tr>
-  <td valign="top" width="50%">
-
-  ### Backend
-  - SpringBoot
-  - Spring JPA
-  - Spring Security
-  - WebFlux
-  - RabbitMQ
-
-  #### Platform
-  - Ubuntu
-
-  #### DB
-  - AWS RDS (Mysql)
-  - Redis
-
-  #### DevOps
-  - AWS EC2
-  - Docker
-  - AWS ALB
-  - Auto Scaling Group
-
-  #### CI/CD
-  - GitHub Action
-
-  #### Test
-  - [테스트 항목 추가]
-
-  </td>
-  <td valign="top">
-
-  ### Frontend
-  - HTML
-  - JavaScript
-  - CSS
-  - Thymeleaf
-
-  </td>
-</tr>
-</table>
-
+|  | Category | Tech |
+|----------|----------|----------|
+| Backend  | Row 1-2  | Row 1-3  |
+| Row 2-1  | Row 2-2  | Row 2-3  |
+| Row 3-1  | Row 3-2  | Row 3-3  |
+| Row 4-1  | Row 4-2  | Row 4-3  |
+| Row 5-1  | Row 5-2  | Row 5-3  |
+| Row 6-1  | Row 6-2  | Row 6-3  |
+| Row 7-1  | Row 7-2  | Row 7-3  |
+| Row 8-1  | Row 8-2  | Row 8-3  |
+| Row 9-1  | Row 9-2  | Row 9-3  |
+| Row 10-1 | Row 10-2 | Row 10-3 |
