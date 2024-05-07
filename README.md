@@ -10,15 +10,15 @@
 ![Untitled](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/06a6f476-b0d8-4eff-806c-7d04de47f1d0)
 
 # ⚡ 기술 스택
-|  | Category | Tech |
+| Backend | Category | Tech |
 |----------|----------|----------|
-| Backend  | Application  | <img src="![image](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/1d3de828-d3c8-44d8-976a-d6c093405da6)"width="100" height="100"> SpringBoot |
-| Row 2-1  | Row 2-2  | Row 2-3  |
-| Row 3-1  | Row 3-2  | Row 3-3  |
-| Row 4-1  | Row 4-2  | Row 4-3  |
-| Row 5-1  | Row 5-2  | Row 5-3  |
-| Row 6-1  | Row 6-2  | Row 6-3  |
-| Row 7-1  | Row 7-2  | Row 7-3  |
-| Row 8-1  | Row 8-2  | Row 8-3  |
-| Row 9-1  | Row 9-2  | Row 9-3  |
-| Row 10-1 | Row 10-2 | Row 10-3 |
+|  | Application  | SpringBoot |
+|  | | Spring JPA |
+|  | | Spring Security|
+|  | | WebFlux |
+|  | | RabbitMQ |
+|  | Platform  | Ubuntu |
+|  | DB  | AWS RDS(Mysql) |
+|  | DB  | AWS Elastic Cache(Redis) |
+|  | DB  | Redis |
+
