@@ -34,10 +34,3 @@
 | Monitoring - System Metric, Logging  | File Beat |
 |  | Metric Beat |  
 
-## FrontEnd  
-| Tech |
-|----------|
-| HTML |
-| JavaScript |
-| CSS |
-| ThymeLeaf |
