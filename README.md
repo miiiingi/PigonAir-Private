@@ -55,7 +55,9 @@ Wiki Link
 Wiki ink  
 
 # 트러블 슈팅   
-Wiki Link  
+[트러블 슈팅 ‐ N 1 문제 해결](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%E2%80%90-N-1--%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)  
+[트러블 슈팅 ‐ LazyInitializationException 문제](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%E2%80%90-LazyInitializationException-%EB%AC%B8%EC%A0%9C)  
+[트러블 슈팅 ‐ 대기열 구현 후 토큰이 넘어가지 않는 문제 해결](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%E2%80%90-%EB%8C%80%EA%B8%B0%EC%97%B4-%EA%B5%AC%ED%98%84-%ED%9B%84-%ED%86%A0%ED%81%B0%EC%9D%B4-%EB%84%98%EC%96%B4%EA%B0%80%EC%A7%80-%EC%95%8A%EB%8A%94-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)  
 
 # 팀원 소개
 | 이름 | 담당 역할 | Github |
