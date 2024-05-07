@@ -5,7 +5,14 @@
 - 실시간 모니터링으로 애플리케이션 및 DB의 병목 상태 확인 가능  
 - 대기열을 통해 서버의 부하를 방지해주고 많은 부하로부터 안정적으로 서비스를 제공  
 - 중복 예약 걱정 없는 누구에게나 공정한 예약 서비스를 위한 동시성 제어  
+
 ```  
+# 🎯 프로젝트 목표  
+```
+- ***최소의 서버 스펙에서 제공할 수 있는 최적의 서비스 찾기***
+- ***각 기술들을 도입했을 때, 얼마나 성능 향상이 있는지 정확하게 파악하기***
+```  
+
 # 🏛️ 서비스 아키텍처  
 ![Untitled](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/06a6f476-b0d8-4eff-806c-7d04de47f1d0)
 
@@ -33,4 +40,6 @@
 | Monitoring - Performance Test  | Elastic APM |
 | Monitoring - System Metric, Logging  | File Beat |
 |  | Metric Beat |  
+# 💾 ERD  
+
 
