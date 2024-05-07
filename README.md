@@ -10,9 +10,9 @@
 ![Untitled](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/06a6f476-b0d8-4eff-806c-7d04de47f1d0)
 
 # ⚡ 기술 스택
-<table>
+<table width="100%">
 <tr>
-  <td valign="top">
+  <td valign="top" width="50%">
 
   ### Backend
   - SpringBoot
