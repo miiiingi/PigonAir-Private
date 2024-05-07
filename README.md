@@ -12,7 +12,7 @@
 # ⚡ 기술 스택
 |  | Category | Tech |
 |----------|----------|----------|
-| Backend  | Application  | <img src=![image](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/1d3de828-d3c8-44d8-976a-d6c093405da6) width="100" height="100"> SpringBoot |
+| Backend  | Application  | <img src="![image](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/1d3de828-d3c8-44d8-976a-d6c093405da6)"width="100" height="100"> SpringBoot |
 | Row 2-1  | Row 2-2  | Row 2-3  |
 | Row 3-1  | Row 3-2  | Row 3-3  |
 | Row 4-1  | Row 4-2  | Row 4-3  |
