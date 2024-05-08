@@ -48,11 +48,50 @@
 # 👤 User Flow  
 ![Untitled (1)](https://github.com/hanghae99-19-final-8/PigonAir/assets/71509516/fe844842-4803-44d8-99ae-c57890f39a56)    
 
-# 🗒️ API 명세서  
-Wiki Link  
+# 🤔 기술 선택에 대한 고민
 
-# 성능 개선 기록  
-Wiki ink  
+| 구분 | 요구사항 | 선택한 기술 | 대안들 | 핵심 기술을 선택한 이유 및 근거 |
+| --- | --- | --- | --- | --- |
+| BE | CI/CD | GitHub Action |  | - Github와 연동 작업이 원활하여 서버 빌드, 배포 과정에 필요한 비용이적음
+- yaml 파일을 이용하여 workflow를 직접 조절할 수 있으므로 자유도가 높은 빌드, 배포 과정을 구축할 수 있음 |
+|  | CI/CD | Docker
+ | AWS(S3, Code Deploy) | Docker는 컨테이너 기술을 활용하여 개발 환경과 운영 환경의 일관성을 보장하며, CI/CD 파이프라인 구축 비용을 최소화할 수 있다고 판단하여 채택. |
+|  | Server | AWS EC2 | NCP EC2 | NCP와 비교하여 AWS는 프리 티어 옵션에서 제공하는 서버의 성능이 뛰어나며, AWS의 Eco-System이 풍부하고, Load Balancer 및 Auto Scaling 기능이 잘 구축되어 있어 채택. |
+|  | DB Server | RDS
+ | EC2 Server | RDS는 관리형 서비스로서 백업, 패치 관리, 스케일링을 자동으로 처리할 수 있어 DB 운영의 편의성을 제공합니다. 이를 통해 서비스 서버에 영향을 받지 않고 DB 성능을 유지할 수 있다.
+또한, 금액대가 존재하지만 사용 가능한 다양한 추가 기능(복제와 같은), 확장성을 고려하여 채택 |
+|  | RDBMS | MYSQL | PostgreSQL | MySQL은 상대적으로 적은 러닝커브와 덜 복잡한 DB 구조를 가지고 있어 사용하기 쉽다. 또한, 서비스에서는 읽기 작업이 중심이므로 쓰기 작업에 특화된 PostgreSQL보다 MySQL을 채택 |
+|  | DB Query | JPA, jpql | QueryDSL | -서비스에 사용될 쿼리문이 fetch join을 여러 번 사용하지 않아 JPA와 @EntityGraph으로도 해결이 가능하다고 판단하여 채택
+DTO가 시간 상 구현되지 못하여 일단 jpql 채택, DTO 구현 후 @EntityGraph로 대체 예정 |
+|  | Caching | RedisCache | Memcached | RedisCache는 복잡한 데이터 구조를 저장할 수 있는 기능을 가지고 있으며, Page<Entity> 객체를 효과적으로 캐싱할 수 있기에 구현이 더 단순한 Memcached보단 Redis의 기능성을 선호하여 채택 |
+|  | 비동기 작업 | @Async | Webflux | 메인 프로젝트 기반이 Web MVC로 작성되어 있어 Webflux와의 충돌이 발생하여 채택. 
+추가적으로 @Async만 추가하면 사용이 가능한 간편함도 고려되었다. |
+|  | MessageQue | RabbitMQ | Kafka, WebSocket | Kafka의 높은 러닝커브와 WebSocket의 높은 리소스 사용을 고려하여 RabbitMQ를 채택 |
+|  | Connection Pool | HikariCP |  | HikariCP는 제로 오버헤드 기술을 제공하며, 설정 수정만으로 효율적인 연결 풀 관리가 가능하여 채택.
+동적 커넥션 풀 관리를 직접 구현해야 한다는 단점이 있지만, 오버헤드가 거의 없고 설정의 단순하다는 장점을 가지고 있다. |
+|  | LoadBalancer |  ALB | nginx | AWS EC2 서버와의 높은 호환성과 적은 러닝커브, 프리 티어 한정 무료 서비스 제공 등으로 ALB를 채택. 
+기본 nginx는 로드 밸런서 기능을 제공하지 않고, 금액을 지불해야 사용할 수 있는 nginx + 가 로드 밸런서 기능을 제공하여 보류 |
+|  | Test |  JMeter | nGrinder | nGrinder는 모든 스크립트를 Groovy로 작성해야 하며 자바 11버전 이하로만 사용 가능하여 윈도우 운영체제 환경에서 러닝커브가 Jmeter보다 높다고 판단하였다.
+JMeter는 CLI와 GUI가 둘 다 가능하며 간단하다. 또한 GUI를 통하여 간단하게 테스트 스크립트를 작성하고, 자세한 테스트 필요시 Groovy로 확장할 수 있어 채택. |
+|  | Application Performance Monitoring | Elastic APM | PinPoint | PinPoint는 환경 구축이 어렵고 참고 자료등의 Eco System이 부족하다고 체감되었고, UI가 측정 지표 등이 한 눈에 들어오지 않는 특징이 있었음
+Elastic APM의 경우 ELK Stack을 기반으로 하기때문에 Eco System이 잘 구축되어있고 환경 설정이 보다 쉬운 점이 있었고, 어플리케이션의 병목, 데이터 베이스의 병목 등을 시각적으로 잘 볼 수 있고, 원하는 지표만을 산출하여 대쉬보드를 구성할 수 있는 등의 확장 기능을 잘 구축되어 있다는 특징이 있어 Elastic APM을 채택 |
+|  | System Metric Monitoring | ELK Stack, Metric beat | Prometheus, Grafana | 이미 Elastic APM을 사용하고 있으므로 ELK Stack을 통한 시스템 메트릭 모니터링은 추가 비용이 적고 통합 관리가 용이하다고 판단하였다.
+또한, 어떤 시점에 어떤 api를 실행할 때 cpu 사용량, 메모리 사용량이 증가하는지를 APM의 결과와 같이 보면 어플리케이션의 상황을 더 잘 파악할 수 있을 것으로 판단하여 ELK Stack, Metric Beat를 채택 |
+|  | 대기열 | Redis, WebFlux | Kafka, Websocket | Kafka는 프로젝트에서 사용하기엔 단순하게 토큰만 주고받기에 높은 러닝커브를 가지고 있어 보류.
+Websocket의 경우 실시간 통신이라는 유용한 기능을 가지고 있지만, 서비스상 많은 리소스를 차지하여 보류. 
+미리 기술 스택을 적용중인 Redis를 채택하였다. |
+|  | 캐싱 작업 | Elastic Cache Redis | EC2 Redis | 캐싱 작업을 EC2 인스턴스 내에서 진행한다는 것은 서비스 서버에 잠재적인 부하가 가해질 것이라 판단하여 분리하기로 결정.
+AWS EC2 서버에서 설정하기 쉬운 Elastic Cache Redis 채택 |기술 선택에 대한 고민
+
+
+# 성능 개선 사항  
+- [성능 개선 사항 - Caching](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-Caching)  
+- [성능 개선 사항 - DB Indexing](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-DB-indexing)  
+- [성능 개선 사항 - 대기열](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-%EB%8C%80%EA%B8%B0%EC%97%B4)  
+- [성능 개선 사항 - 비동기 작업](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-%EB%B9%84%EB%8F%99%EA%B8%B0-%EC%9E%91%EC%97%85)  
+- [성능 개선 사항 - Elastic Cache](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-AWS-Elastic-Cache)  
+- [성능 개선 사항 - AWS ALB, AutoScalingGroup](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-%EA%B0%80%EC%9A%A9%EC%84%B1-%ED%99%95%EB%B3%B4(AWS-ALB,-Auto-Scaling))  
+- [성능 개선 사항 - Connection Pool 최적화](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%82%AC%ED%95%AD-%E2%80%90-Connection-Pool-%EC%B5%9C%EC%A0%81%ED%99%94)    
 
 # 트러블 슈팅   
 - [트러블 슈팅 ‐ N 1 문제 해결](https://github.com/hanghae99-19-final-8/PigonAir/wiki/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-%E2%80%90-N-plus-1--%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)  
